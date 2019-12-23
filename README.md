@@ -16,3 +16,4 @@ Tips:
 * docker-compose run app sh -c "python manage.py test && flake8" # Test
 * docker-compose run app sh -c "python manage.py startapp core" # Create core
 * docker-compose run app sh -c "python manage.py makemigrations" # Make migrations
+* docker-compose run app sh -c "python manage.py createsuperuser" # Create superuser
