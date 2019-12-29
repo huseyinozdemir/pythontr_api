@@ -15,11 +15,16 @@ def avatar_image_file_path(instance, filename):
     return os.path.join(settings.AVATAR_ROOT, filename)
 
 
+def validate_user(**kwargs):
+    for key, value in kwargs.items():
+        if not value:
+            raise ValueError('Users must have an {} address'.format(value))
+
+
 class UserManager(BaseUserManager):
 
     def create_user(self, email, password=None, **extra_fields):
-        if not email:
-            raise ValueError('Users must have an email address')
+        validate_user(email=email)
         user = self.model(email=self.normalize_email(email), **extra_fields)
         user.set_password(password)
         user.save(using=self._db)
