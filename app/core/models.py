@@ -5,12 +5,14 @@ from django.db import models
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, \
                                        PermissionsMixin
 
+from app import settings
+
 
 def avatar_image_file_path(instance, filename):
     ext = filename.split('.')[-1]
     filename = f'{uuid.uuid4()}.{ext}'
 
-    return os.path.join('avatar/', filename)
+    return os.path.join(settings.AVATAR_ROOT, filename)
 
 
 class UserManager(BaseUserManager):
