@@ -5,13 +5,13 @@ from rest_framework import serializers
 
 
 class UserSerializer(serializers.ModelSerializer):
-    image = serializers.SerializerMethodField('get_image')
+    image_url = serializers.SerializerMethodField('get_image_url')
 
     class Meta:
         model = get_user_model()
         fields = (
             'email', 'password', 'username', 'name', 'surname', 'image',
-            'about_me', 'linkedin', 'is_notification_email',
+            'image_url', 'about_me', 'linkedin', 'is_notification_email',
         )
         extra_kwargs = {'password': {'write_only': True, 'min_length': 5}}
 
@@ -28,9 +28,9 @@ class UserSerializer(serializers.ModelSerializer):
 
         return user
 
-    def get_image(self, obj):
-        image = '{}'.format(obj.image.url.replace('app', ''))
-        return image
+    def get_image_url(self, obj):
+        image_url = '{}'.format(obj.image.url.replace('app', ''))
+        return image_url
 
 
 class AuthTokenSerializer(serializers.Serializer):
