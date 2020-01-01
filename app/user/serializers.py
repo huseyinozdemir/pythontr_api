@@ -5,6 +5,7 @@ from rest_framework import serializers
 
 
 class UserSerializer(serializers.ModelSerializer):
+    image = serializers.SerializerMethodField('get_image')
 
     class Meta:
         model = get_user_model()
@@ -26,6 +27,10 @@ class UserSerializer(serializers.ModelSerializer):
             user.save()
 
         return user
+
+    def get_image(self, obj):
+        image = '{}'.format(obj.image.url.replace('app', ''))
+        return image
 
 
 class AuthTokenSerializer(serializers.Serializer):
