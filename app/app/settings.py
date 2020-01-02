@@ -134,4 +134,5 @@ STATICFILES_DIRS = (
 
 AVATAR_ROOT = os.path.join(BASE_DIR, 'static/avatar/')
 
+APLICATION_NAME = 'app'
 AUTH_USER_MODEL = 'core.User'

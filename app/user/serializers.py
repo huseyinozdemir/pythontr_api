@@ -5,12 +5,13 @@ from rest_framework import serializers
 
 
 class UserSerializer(serializers.ModelSerializer):
+    image_url = serializers.ReadOnlyField()
 
     class Meta:
         model = get_user_model()
         fields = (
             'email', 'password', 'username', 'name', 'surname', 'image',
-            'about_me', 'linkedin', 'is_notification_email',
+            'about_me', 'linkedin', 'is_notification_email', 'image_url',
         )
         extra_kwargs = {'password': {'write_only': True, 'min_length': 5}}
 

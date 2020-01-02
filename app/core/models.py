@@ -5,7 +5,7 @@ from django.db import models
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, \
                                        PermissionsMixin
 
-from app import settings
+from django.conf import settings
 
 
 def avatar_image_file_path(instance, filename):
@@ -60,3 +60,10 @@ class User(AbstractBaseUser, PermissionsMixin):
     objects = UserManager()
 
     USERNAME_FIELD = 'email'
+
+    @property
+    def image_url(self):
+        image_url = None
+        if self.image:
+            image_url = self.image.url.replace(settings.APLICATION_NAME, '')
+        return image_url
