@@ -67,3 +67,19 @@ class User(AbstractBaseUser, PermissionsMixin):
         if self.image:
             image_url = self.image.url.replace(settings.APLICATION_NAME, '')
         return image_url
+
+
+class Category(models.Model):
+    name = models.CharField(max_length=255)
+    short_name = models.CharField(max_length=100)
+    parent_category = models.ForeignKey(
+        'self', on_delete=models.SET_NULL,
+        null=True, blank=True
+    )
+    user = models.ForeignKey(
+        settings.AUTH_USER_MODEL, on_delete=models.SET_NULL,
+        null=True, blank=True
+    )
+
+    def __str__(self):
+        return self.name
