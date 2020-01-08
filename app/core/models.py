@@ -70,8 +70,8 @@ class User(AbstractBaseUser, PermissionsMixin):
 
 
 class Category(models.Model):
-    name = models.CharField(max_length=255)
-    short_name = models.CharField(max_length=100)
+    name = models.CharField(max_length=255, unique=True)
+    short_name = models.CharField(max_length=100, unique=True)
     parent_category = models.ForeignKey(
         'self', on_delete=models.SET_NULL,
         null=True, blank=True
