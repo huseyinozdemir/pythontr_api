@@ -76,6 +76,7 @@ class Category(models.Model):
         'self', on_delete=models.SET_NULL,
         null=True, blank=True
     )
+    sort = models.SmallIntegerField(default=0)
     user = models.ForeignKey(
         settings.AUTH_USER_MODEL, on_delete=models.SET_NULL,
         null=True, blank=True
