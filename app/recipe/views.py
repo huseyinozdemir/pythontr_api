@@ -9,8 +9,8 @@ from recipe import serializers
 
 class CategoryViewSet(viewsets.GenericViewSet, mixins.ListModelMixin):
 
-    authentication_classes = (TokenAuthentication,)
-    permission_classes = (IsAuthenticated,)
+    #authentication_classes = (TokenAuthentication,)
+    #permission_classes = (IsAuthenticated,)
     queryset = Category.objects.all()
     serializer_class = serializers.CategorySerializer
 
