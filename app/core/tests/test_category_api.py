@@ -18,10 +18,11 @@ class PublicCategoryApiTests(TestCase):
     def setUp(self):
         self.client = APIClient()
 
-    def test_login_required(self):
+    def test_login_not_required(self):
         res = self.client.get(CATEGORIES_URL)
 
-        self.assertEqual(res.status_code, status.HTTP_401_UNAUTHORIZED)
+        # self.assertEqual(res.status_code, status.HTTP_401_UNAUTHORIZED)
+        self.assertEqual(res.status_code, status.HTTP_200_OK)
 
 
 class PrivateCategoryApiTests(TestCase):
