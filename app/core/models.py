@@ -47,7 +47,8 @@ class User(AbstractBaseUser, PermissionsMixin):
     username = models.CharField(max_length=255, blank=True)
     name = models.CharField(max_length=255, blank=True)
     surname = models.CharField(max_length=255, blank=True)
-    image = models.ImageField(null=True, upload_to=avatar_image_file_path)
+    image = models.ImageField(null=True, upload_to=avatar_image_file_path,
+                              blank=True)
     about_me = models.TextField(blank=True)
     linkedin = models.CharField(max_length=255, blank=True)
     is_notification_email = models.BooleanField(default=True)

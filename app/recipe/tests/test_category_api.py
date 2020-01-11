@@ -66,3 +66,18 @@ class PrivateCategoryApiTests(TestCase):
         self.assertEqual(res.status_code, status.HTTP_200_OK)
         self.assertEqual(len(res.data), 2)
         self.assertEqual(res.data[1]['name'], category.name)
+
+    def test_create_category_successful(self):
+        content = {'name': 'python programlama', 'short_name': 'Python'}
+        self.user.is_staff = True
+        self.client.post(CATEGORIES_URL, content)
+        exists = Category.objects.filter(
+            user=self.user,
+            name=content['name']
+        ).exists()
+        self.assertTrue(exists)
+
+    def test_create_category_forbidden(self):
+        content = {'name': 'database', 'short_name': 'db'}
+        res = self.client.post(CATEGORIES_URL, content)
+        self.assertEqual(res.status_code, status.HTTP_403_FORBIDDEN)
