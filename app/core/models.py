@@ -83,5 +83,16 @@ class Category(models.Model):
         null=True, blank=True
     )
 
-    def __str__(self):
+    def __unicode__(self):
         return self.name
+
+    def __str__(self):
+        full_path = [self.name]
+        k = self.parent_category
+        while k is not None:
+            full_path.append(k.name)
+            k = k.parent_category
+
+        full_path = ' / '.join(full_path[::-1])
+
+        return full_path

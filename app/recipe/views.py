@@ -32,7 +32,11 @@ class CategoryViewSet(viewsets.GenericViewSet, mixins.ListModelMixin,
             return result
 
     def get_queryset(self):
-        return self.queryset.all().order_by('-sort')
+        categories = self.queryset.all()
+        categories = sorted(categories, key=lambda x: x.__str__())
+        for cat in categories:
+            cat.name = cat.__str__()
+        return categories
 
     def perform_create(self, serializer):
         serializer.save(user=self.request.user)
