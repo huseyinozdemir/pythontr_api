@@ -51,5 +51,6 @@ class CategoryViewSet(BaseViewSet):
         if categories:
             queryset = queryset.filter(name__contains=categories)
         if self.action == 'list':
+            queryset = queryset.all()
             queryset = sorted(queryset, key=lambda x:x.full_category_name)
         return queryset
