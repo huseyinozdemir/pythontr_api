@@ -2,7 +2,6 @@ from rest_framework import viewsets, mixins
 from rest_framework.authentication import TokenAuthentication
 from rest_framework.permissions import IsAuthenticated, AllowAny, IsAdminUser
 
-
 from core.models import Category
 
 from recipe import serializers
@@ -49,8 +48,8 @@ class CategoryViewSet(BaseViewSet):
         categories = self.request.query_params.get('search')
         queryset = self.queryset
         if categories:
-            queryset = queryset.filter(name__contains=categories)
+            queryset = queryset.filter(name__icontains=categories)
         if self.action == 'list':
             queryset = queryset.all()
-            queryset = sorted(queryset, key=lambda x:x.full_category_name)
+            queryset = sorted(queryset, key=lambda x: x.full_category_name)
         return queryset
