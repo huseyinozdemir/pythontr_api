@@ -8,12 +8,19 @@ from core.models import Category
 from recipe import serializers
 
 
-class BaseViewSet(viewsets.GenericViewSet, mixins.ListModelMixin,
-                  mixins.CreateModelMixin):
+class BaseViewSet(viewsets.GenericViewSet,
+                  mixins.ListModelMixin,
+                  mixins.RetrieveModelMixin,
+                  mixins.CreateModelMixin,
+                  mixins.UpdateModelMixin,
+                  mixins.DestroyModelMixin):
+
     authentication_classes = (TokenAuthentication,)
     permission_classes = (IsAuthenticated,)
 
     permission_classes_by_action = {'create': [IsAdminUser],
+                                    'update': [IsAdminUser],
+                                    'retrieve': [AllowAny],
                                     'list': [AllowAny]}
 
     def get_permissions(self):
@@ -28,20 +35,21 @@ class BaseViewSet(viewsets.GenericViewSet, mixins.ListModelMixin,
         finally:
             return result
 
-    def get_queryset(self):
-        return self.queryset.filter(user=self.request.user).order_by('-name')
-
     def perform_create(self, serializer):
         serializer.save(user=self.request.user)
 
 
 class CategoryViewSet(BaseViewSet):
-
     queryset = Category.objects.all()
     serializer_class = serializers.CategorySerializer
+    permission_classes_by_action = {'list': [AllowAny],
+                                    'retrieve': [AllowAny]}
 
     def get_queryset(self):
-        categories = self.queryset.all()
-        #categories = sorted(categories, key=lambda x: x.__str__())
-        categories = sorted(categories, key=lambda x: x.full_category_name)
-        return categories
+        categories = self.request.query_params.get('search')
+        queryset = self.queryset
+        if categories:
+            queryset = queryset.filter(name__contains=categories)
+        if self.action == 'list':
+            queryset = sorted(queryset, key=lambda x:x.full_category_name)
+        return queryset
