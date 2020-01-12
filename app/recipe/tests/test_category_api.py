@@ -45,7 +45,7 @@ class PrivateCategoryApiTests(TestCase):
 
         res = self.client.get(CATEGORIES_URL)
 
-        categories = Category.objects.all().order_by('-name')
+        categories = Category.objects.all().order_by('name')
         serializer = CategorySerializer(categories, many=True)
         self.assertEqual(res.status_code, status.HTTP_200_OK)
         self.assertEqual(res.data, serializer.data)

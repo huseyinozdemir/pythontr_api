@@ -83,6 +83,10 @@ class Category(models.Model):
         null=True, blank=True
     )
 
+    @property
+    def full_category_name(self):
+        return self.__str__()
+
     def __unicode__(self):
         return self.name
 

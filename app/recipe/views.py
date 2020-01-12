@@ -8,13 +8,10 @@ from core.models import Category
 from recipe import serializers
 
 
-class CategoryViewSet(viewsets.GenericViewSet, mixins.ListModelMixin,
-                      mixins.CreateModelMixin):
-
+class BaseViewSet(viewsets.GenericViewSet, mixins.ListModelMixin,
+                  mixins.CreateModelMixin):
     authentication_classes = (TokenAuthentication,)
     permission_classes = (IsAuthenticated,)
-    queryset = Category.objects.all()
-    serializer_class = serializers.CategorySerializer
 
     permission_classes_by_action = {'create': [IsAdminUser],
                                     'list': [AllowAny]}
@@ -32,11 +29,19 @@ class CategoryViewSet(viewsets.GenericViewSet, mixins.ListModelMixin,
             return result
 
     def get_queryset(self):
-        categories = self.queryset.all()
-        categories = sorted(categories, key=lambda x: x.__str__())
-        for cat in categories:
-            cat.name = cat.__str__()
-        return categories
+        return self.queryset.filter(user=self.request.user).order_by('-name')
 
     def perform_create(self, serializer):
         serializer.save(user=self.request.user)
+
+
+class CategoryViewSet(BaseViewSet):
+
+    queryset = Category.objects.all()
+    serializer_class = serializers.CategorySerializer
+
+    def get_queryset(self):
+        categories = self.queryset.all()
+        #categories = sorted(categories, key=lambda x: x.__str__())
+        categories = sorted(categories, key=lambda x: x.full_category_name)
+        return categories
