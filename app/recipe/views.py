@@ -2,7 +2,7 @@ from rest_framework import viewsets, mixins
 from rest_framework.authentication import TokenAuthentication
 from rest_framework.permissions import IsAuthenticated, AllowAny, IsAdminUser
 
-from core.models import Category
+from core.models import Category, Article
 
 from recipe import serializers
 
@@ -52,4 +52,23 @@ class CategoryViewSet(BaseViewSet):
         if self.action == 'list':
             queryset = queryset.all()
             queryset = sorted(queryset, key=lambda x: x.full_category_name)
+        return queryset
+
+
+class ArticleViewSet(BaseViewSet):
+    queryset = Article.objects.all()
+    serializer_class = serializers.ArticleSerializer
+    permission_classes_by_action = {'list': [AllowAny],
+                                    'retrieve': [AllowAny],
+                                    'create': [IsAuthenticated],
+                                    'updated': [IsAuthenticated]}
+
+    def get_queryset(self):
+        articles = self.request.query_params.get('search')
+        queryset = self.queryset
+        if articles:
+            queryset = queryset.filter(title__icontains=articles)
+        if self.action == 'list':
+            queryset = queryset.all()
+            queryset = sorted(queryset, key=lambda x: x.__str__)
         return queryset
