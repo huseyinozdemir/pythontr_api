@@ -7,7 +7,8 @@ from recipe import views
 # /api/recipe/categories/1/
 router = DefaultRouter()
 router.register('categories', views.CategoryViewSet)
-router.register('articles', views.ArticleViewSet)
+router.register('private-articles', views.PrivateArticlesViewSet)
+router.register('articles', views.ArticlesViewSet)
 
 app_name = 'recipe'
 

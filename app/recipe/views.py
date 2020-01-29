@@ -55,11 +55,30 @@ class CategoryViewSet(BaseViewSet):
         return queryset
 
 
-class ArticleViewSet(BaseViewSet):
+class ArticlesViewSet(BaseViewSet):
     queryset = Article.objects.all()
     serializer_class = serializers.ArticleSerializer
     permission_classes_by_action = {'list': [AllowAny],
                                     'retrieve': [AllowAny],
+                                    'create': [IsAdminUser],
+                                    'updated': [IsAdminUser]}
+
+    def get_queryset(self):
+        articles = self.request.query_params.get('search')
+        queryset = self.queryset
+        if articles:
+            queryset = queryset.filter(title__icontains=articles)
+        if self.action == 'list':
+            queryset = queryset.all()
+            queryset = sorted(queryset, key=lambda x: x.__str__)
+        return queryset
+
+
+class PrivateArticlesViewSet(BaseViewSet):
+    queryset = Article.objects.all()
+    serializer_class = serializers.ArticleSerializer
+    permission_classes_by_action = {'list': [IsAuthenticated],
+                                    'retrieve': [IsAuthenticated],
                                     'create': [IsAuthenticated],
                                     'updated': [IsAuthenticated]}
 
