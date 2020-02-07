@@ -10,15 +10,13 @@ from recipe import serializers
 class BaseViewSet(viewsets.GenericViewSet,
                   mixins.ListModelMixin,
                   mixins.RetrieveModelMixin,
-                  mixins.CreateModelMixin,
                   mixins.UpdateModelMixin,
                   mixins.DestroyModelMixin):
 
     authentication_classes = (TokenAuthentication,)
     permission_classes = (IsAuthenticated,)
 
-    permission_classes_by_action = {'create': [IsAdminUser],
-                                    'update': [IsAdminUser],
+    permission_classes_by_action = {'update': [IsAdminUser],
                                     'retrieve': [AllowAny],
                                     'list': [AllowAny]}
 
@@ -38,10 +36,11 @@ class BaseViewSet(viewsets.GenericViewSet,
         serializer.save(user=self.request.user)
 
 
-class CategoryViewSet(BaseViewSet):
+class CategoryViewSet(BaseViewSet, mixins.CreateModelMixin):
     queryset = Category.objects.all()
     serializer_class = serializers.CategorySerializer
-    permission_classes_by_action = {'list': [AllowAny],
+    permission_classes_by_action = {'create': [IsAdminUser],
+                                    'list': [AllowAny],
                                     'retrieve': [AllowAny]}
 
     def get_queryset(self):
@@ -60,7 +59,6 @@ class ArticlesViewSet(BaseViewSet):
     serializer_class = serializers.ArticleSerializer
     permission_classes_by_action = {'list': [AllowAny],
                                     'retrieve': [AllowAny],
-                                    'create': [IsAdminUser],
                                     'updated': [IsAdminUser]}
 
     def get_queryset(self):
@@ -74,12 +72,12 @@ class ArticlesViewSet(BaseViewSet):
         return queryset
 
 
-class PrivateArticlesViewSet(BaseViewSet):
+class PrivateArticlesViewSet(BaseViewSet, mixins.CreateModelMixin):
     queryset = Article.objects.all()
     serializer_class = serializers.ArticleSerializer
-    permission_classes_by_action = {'list': [IsAuthenticated],
+    permission_classes_by_action = {'create': [IsAuthenticated],
+                                    'list': [IsAuthenticated],
                                     'retrieve': [IsAuthenticated],
-                                    'create': [IsAuthenticated],
                                     'updated': [IsAuthenticated]}
 
     def get_queryset(self):

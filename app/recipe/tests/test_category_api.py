@@ -80,4 +80,4 @@ class PrivateCategoryApiTests(TestCase):
     def test_create_category_invalid(self):
         content = {'name': '', 'short_name': 'db'}
         res = self.client.post(CATEGORIES_URL, content)
-        self.assertEqual(res.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertEqual(res.status_code, status.HTTP_403_FORBIDDEN)

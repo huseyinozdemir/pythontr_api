@@ -5,7 +5,7 @@ from django.test import TestCase
 from rest_framework import status
 from rest_framework.test import APIClient
 
-from core.models import Category
+from core.models import Category, Article
 
 # from recipe.serializers import ArticleSerializer
 
@@ -18,6 +18,10 @@ def get_article(client, pk=1):
     return client.get(ARTICLES_DETAIL_URL)
 
 
+def detail_url(id):
+    return reverse('recipe:article-detail', args=[id])
+
+
 class PublicArticleApiTest(TestCase):
 
     def setUp(self):
@@ -28,7 +32,7 @@ class PublicArticleApiTest(TestCase):
         self.client = APIClient()
         self.client.force_authenticate(self.user)
 
-    def test_list_login_not_requried(self):
+    def test_list_not_login_requried(self):
         res = self.client.get(ARTICLES_URL)
 
         self.assertEqual(res.status_code, status.HTTP_200_OK)
@@ -52,7 +56,7 @@ class PublicArticleApiTest(TestCase):
             'user': [self.user.id]
         }
         res = self.client.post(ARTICLES_URL, content)
-        self.assertEqual(res.status_code, status.HTTP_403_FORBIDDEN)
+        self.assertEqual(res.status_code, status.HTTP_405_METHOD_NOT_ALLOWED)
         # res = get_article(self.client, res.data['id'])
         # self.assertEquals(res.status_code, status.HTTP_200_OK)
 
@@ -65,3 +69,31 @@ class PrivateArticleApiTest(TestCase):
                 '123qwe'
         )
         self.client = APIClient()
+        self.client.force_authenticate(self.user)
+
+    def test_update_article(self):
+        self.is_staff = True
+        category = Category.objects.create(
+            user=self.user, name="veritabani mysql", short_name='mysql'
+        )
+        article = Article.objects.create(
+            title='How to update for dictionary',
+            title_h1='Upade for dictionary on Python Programming Language',
+            description='Bla bla bla',
+            content='............... bla bla ...  bla ........',
+            user=self.user
+        )
+        content = {
+            'id': article.id,
+            'categories': [category.id],
+            'title': 'Deneme',
+            'title_h1': 'Upade for dictionary on Python Programming Language',
+            'description': 'Bla bla bla',
+            'content': '............... bla bla ...  bla ........',
+            'user': [self.user.id]
+        }
+        url = detail_url(article.id)
+
+        res = self.client.put(url, content)
+        self.assertEquals(res.status_code, status.HTTP_200_OK)
+        self.assertEquals(res.data['title'], content['title'])
