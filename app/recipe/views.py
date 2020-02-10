@@ -11,7 +11,8 @@ class BaseViewSet(viewsets.GenericViewSet,
                   mixins.ListModelMixin,
                   mixins.RetrieveModelMixin,
                   mixins.UpdateModelMixin,
-                  mixins.DestroyModelMixin):
+                  # mixins.DestroyModelMixin
+                  ):
 
     authentication_classes = (TokenAuthentication,)
     permission_classes = (IsAuthenticated,)

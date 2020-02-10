@@ -13,12 +13,7 @@ from core.models import Category, Article
 ARTICLES_URL = reverse('recipe:article-list')
 
 
-def get_article(client, pk=1):
-    ARTICLES_DETAIL_URL = reverse('recipe:article-detail', kwargs={'pk': pk})
-    return client.get(ARTICLES_DETAIL_URL)
-
-
-def detail_url(id):
+def detail_url(id=1):
     return reverse('recipe:article-detail', args=[id])
 
 
@@ -38,7 +33,8 @@ class PublicArticleApiTest(TestCase):
         self.assertEqual(res.status_code, status.HTTP_200_OK)
 
     def test_404_article_login_not_required(self):
-        res = get_article(self.client)
+        url = detail_url()
+        res = self.client.get(url)
 
         self.assertEqual(res.status_code, status.HTTP_404_NOT_FOUND)
 
@@ -81,6 +77,7 @@ class PrivateArticleApiTest(TestCase):
             title_h1='Upade for dictionary on Python Programming Language',
             description='Bla bla bla',
             content='............... bla bla ...  bla ........',
+            is_active=True,
             user=self.user
         )
         content = {
