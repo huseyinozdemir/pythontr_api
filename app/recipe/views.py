@@ -66,9 +66,11 @@ class ArticlesViewSet(BaseViewSet):
         articles = self.request.query_params.get('search')
         queryset = self.queryset
         if articles:
-            queryset = queryset.filter(title__icontains=articles)
+            queryset = queryset.filter(title__icontains=articles,
+                                       is_active=True,
+                                       is_delete=False)
         if self.action == 'list':
-            queryset = queryset.all()
+            queryset = queryset.all().filter(is_active=True, is_delete=False)
             queryset = sorted(queryset, key=lambda x: x.__str__)
         return queryset
 

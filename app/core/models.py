@@ -21,13 +21,6 @@ def validate_user(**kwargs):
             raise ValueError('Users must have an {} address'.format(value))
 
 
-class ArticleManager(models.Manager):
-    def get_queryset(self):
-        return super(ArticleManager,
-                     self).get_queryset().filter(is_active=True,
-                                                 is_delete=False)
-
-
 class UserManager(BaseUserManager):
 
     def create_user(self, email, password=None, **extra_fields):
@@ -133,8 +126,6 @@ class Article(models.Model):
         null=True, blank=True
     )
     is_delete = models.BooleanField(default=False)
-
-    objects = ArticleManager()
 
     def __str__(self):
         return self.title
