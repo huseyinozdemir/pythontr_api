@@ -5,6 +5,7 @@ from rest_framework.permissions import IsAuthenticated, AllowAny, IsAdminUser
 from core.models import Category, Article
 
 from recipe import serializers
+from recipe.permissions import IsAuthenticatedAndOwner
 
 
 class BaseViewSet(viewsets.GenericViewSet,
@@ -55,40 +56,32 @@ class CategoryViewSet(BaseViewSet, mixins.CreateModelMixin):
         return queryset
 
 
-class ArticlesViewSet(BaseViewSet):
+class ArticleViewSet(BaseViewSet, mixins.CreateModelMixin):
     queryset = Article.objects.all()
     serializer_class = serializers.ArticleSerializer
-    permission_classes_by_action = {'list': [AllowAny],
-                                    'retrieve': [AllowAny],
-                                    'updated': [IsAdminUser]}
+    permission_classes_by_action = {
+        'list': [AllowAny], 'retrieve': [AllowAny],
+        'create': [IsAuthenticated],
+        'update': [IsAuthenticatedAndOwner],
+    }
 
     def get_queryset(self):
-        articles = self.request.query_params.get('search')
+        articles = self.request.query_params.get('search', None)
+        me = self.request.query_params.get('me', None)
         queryset = self.queryset
         if articles:
             queryset = queryset.filter(title__icontains=articles,
                                        is_active=True,
                                        is_delete=False)
         if self.action == 'list':
-            queryset = queryset.all().filter(is_active=True, is_delete=False)
-            queryset = sorted(queryset, key=lambda x: x.__str__)
-        return queryset
-
-
-class PrivateArticlesViewSet(BaseViewSet, mixins.CreateModelMixin):
-    queryset = Article.objects.all()
-    serializer_class = serializers.ArticleSerializer
-    permission_classes_by_action = {'create': [IsAuthenticated],
-                                    'list': [IsAuthenticated],
-                                    'retrieve': [IsAuthenticated],
-                                    'updated': [IsAuthenticated]}
-
-    def get_queryset(self):
-        articles = self.request.query_params.get('search')
-        queryset = self.queryset
-        if articles:
-            queryset = queryset.filter(title__icontains=articles)
-        if self.action == 'list':
-            queryset = queryset.all()
-            queryset = sorted(queryset, key=lambda x: x.__str__)
+            newquery = queryset.filter(
+                is_active=True,
+                is_delete=False
+            ).all().order_by('-id').distinct()
+            if me:
+                request = self.request
+                if not request or not queryset:
+                    return None
+                newquery = queryset.filter(user=request.user, is_delete=False)
+            queryset = newquery
         return queryset

@@ -25,7 +25,7 @@ class PublicArticleApiTest(TestCase):
                 '123qwe'
         )
         self.client = APIClient()
-        self.client.force_authenticate(self.user)
+        # self.client.force_authenticate(self.user)
 
     def test_list_not_login_requried(self):
         res = self.client.get(ARTICLES_URL)
@@ -39,7 +39,7 @@ class PublicArticleApiTest(TestCase):
         self.assertEqual(res.status_code, status.HTTP_404_NOT_FOUND)
 
     def test_dont_create_article(self):
-        self.client.force_authenticate(self.user)
+        # self.client.force_authenticate(self.user)
         category = Category.objects.create(
             user=self.user, name="veritabani mysql", short_name='mysql'
         )
@@ -52,9 +52,24 @@ class PublicArticleApiTest(TestCase):
             'user': [self.user.id]
         }
         res = self.client.post(ARTICLES_URL, content)
-        self.assertEqual(res.status_code, status.HTTP_405_METHOD_NOT_ALLOWED)
-        # res = get_article(self.client, res.data['id'])
-        # self.assertEquals(res.status_code, status.HTTP_200_OK)
+        self.assertEqual(res.status_code, status.HTTP_401_UNAUTHORIZED)
+
+    def test_get_article(self):
+        category = Category.objects.create(
+            user=self.user, name="veritabani mysql", short_name='mysql'
+        )
+        article = Article.objects.create(
+            title='How to update for dictionary',
+            title_h1='Upade for dictionary on Python Programming Language',
+            description='Bla bla bla',
+            content='............... bla bla ...  bla ........',
+            is_active=True
+        )
+        article.categories.add(category)
+        url = detail_url(article.id)
+
+        res = self.client.get(url)
+        self.assertEquals(res.status_code, status.HTTP_200_OK)
 
 
 class PrivateArticleApiTest(TestCase):
