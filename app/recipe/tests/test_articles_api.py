@@ -82,6 +82,23 @@ class PrivateArticleApiTest(TestCase):
         self.client = APIClient()
         self.client.force_authenticate(self.user)
 
+    def test_create_article(self):
+        self.is_staff = True
+        category = Category.objects.create(
+            user=self.user, name="veritabani mysql", short_name='mysql'
+        )
+        content = {
+            'categories': [category.id],
+            'title': 'Deneme',
+            'title_h1': 'Upade for dictionary on Python Programming Language',
+            'description': 'Bla bla bla',
+            'content': '............... bla bla ...  bla ........',
+            'user': [self.user.id]
+        }
+
+        res = self.client.post(ARTICLES_URL, content)
+        self.assertEquals(res.status_code, status.HTTP_201_CREATED)
+
     def test_update_article(self):
         self.is_staff = True
         category = Category.objects.create(
@@ -109,3 +126,22 @@ class PrivateArticleApiTest(TestCase):
         res = self.client.put(url, content)
         self.assertEquals(res.status_code, status.HTTP_200_OK)
         self.assertEquals(res.data['title'], content['title'])
+
+    def test_dont_delete_article(self):
+        self.is_staff = True
+        category = Category.objects.create(
+            user=self.user, name="veritabani mysql", short_name='mysql'
+        )
+        article = Article.objects.create(
+            title='How to update for dictionary',
+            title_h1='Upade for dictionary on Python Programming Language',
+            description='Bla bla bla',
+            content='............... bla bla ...  bla ........',
+            is_active=True,
+            user=self.user
+        )
+        article.categories.add(category)
+        url = detail_url(article.id)
+
+        res = self.client.delete(url)
+        self.assertEqual(res.status_code, status.HTTP_405_METHOD_NOT_ALLOWED)
