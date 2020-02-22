@@ -78,7 +78,7 @@ class ArticleViewSet(BaseViewSet, mixins.CreateModelMixin):
                 is_active=True,
                 is_delete=False
             ).all().order_by('-id').distinct()
-            if me:
+            if me == 'true':
                 request = self.request
                 if not request or not queryset:
                     return None

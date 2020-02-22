@@ -11,6 +11,7 @@ from core.models import Category, Article
 
 
 ARTICLES_URL = reverse('recipe:article-list')
+ARTICLES_URL_ME = '{}{}'.format(ARTICLES_URL, '?me=true')
 
 
 def detail_url(id=1):
@@ -101,6 +102,7 @@ class PrivateArticleApiTest(TestCase):
 
     def test_update_article(self):
         self.is_staff = True
+
         category = Category.objects.create(
             user=self.user, name="veritabani mysql", short_name='mysql'
         )
@@ -145,3 +147,49 @@ class PrivateArticleApiTest(TestCase):
 
         res = self.client.delete(url)
         self.assertEqual(res.status_code, status.HTTP_405_METHOD_NOT_ALLOWED)
+
+    def test_filter_me_get(self):
+        self.is_staff = True
+
+        different_user = get_user_model().objects.create_user(
+                'differentuser@hotmail.com',
+                '123qwe'
+        )
+
+        category = Category.objects.create(
+            user=self.user, name="veritabani mysql", short_name='mysql'
+        )
+
+        article = Article.objects.create(
+            title='How to update for dictionary',
+            title_h1='Upade for dictionary on Python Programming Language',
+            description='Bla bla bla',
+            content='............... bla bla ...  bla ........',
+            is_active=True,
+            user=self.user
+        )
+        article.categories.add(category)
+
+        article = Article.objects.create(
+            title='Python for and wihle syntax',
+            title_h1='Bla bla',
+            description='Bla bla bla',
+            content='............... bla bla ...  bla ........',
+            is_active=True,
+            user=different_user
+        )
+        article.categories.add(category)
+
+        article = Article.objects.create(
+            title='Mongoos and Nodejs',
+            title_h1='Bla bla bla',
+            description='Bla bla bla',
+            content='............... bla bla ...  bla ........',
+            is_active=True,
+            user=self.user
+        )
+        article.categories.add(category)
+
+        res = self.client.get(ARTICLES_URL_ME)
+        self.assertEqual(res.status_code, status.HTTP_200_OK)
+        self.assertEqual(len(res.data), 2)
