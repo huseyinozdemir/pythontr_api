@@ -134,12 +134,17 @@ class Article(models.Model):
 
 
 class Comment(models.Model):
-    content = models.CharField(max_length=500)
     content_type = models.ForeignKey(ContentType, on_delete=models.CASCADE)
     object_id = models.PositiveIntegerField()
     content_object = GenericForeignKey('content_type', 'object_id')
 
-    email = models.TextField(blank=True)
+    create_at = models.DateTimeField(auto_now_add=True)
+    content = models.CharField(max_length=500)
+    email = models.CharField(max_length=100)
+    name = models.CharField(max_length=50)
+    ip = models.CharField(max_length=100)
+    is_active = models.BooleanField(default=False)
+    is_delete = models.BooleanField(default=False)
 
     def __str__(self):
         return self.content
