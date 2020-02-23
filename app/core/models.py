@@ -115,6 +115,10 @@ class Comment(models.Model):
     email = models.CharField(max_length=100)
     name = models.CharField(max_length=50)
     ip = models.CharField(max_length=100)
+    user = models.ForeignKey(
+        settings.AUTH_USER_MODEL, on_delete=models.SET_NULL,
+        null=True, blank=True
+    )
     is_active = models.BooleanField(default=False)
     is_delete = models.BooleanField(default=False)
     comments = GenericRelation('self')

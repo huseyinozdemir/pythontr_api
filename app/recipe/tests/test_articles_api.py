@@ -36,7 +36,6 @@ class PublicArticleApiTest(TestCase):
     def test_404_article_login_not_required(self):
         url = detail_url()
         res = self.client.get(url)
-
         self.assertEqual(res.status_code, status.HTTP_404_NOT_FOUND)
 
     def test_dont_create_article(self):

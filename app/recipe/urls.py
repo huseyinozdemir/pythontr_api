@@ -7,6 +7,7 @@ from recipe import views
 router = DefaultRouter()
 router.register('categories', views.CategoryViewSet)
 router.register('articles', views.ArticleViewSet)
+router.register('comments', views.CommentViewSet)
 app_name = 'recipe'
 
 urlpatterns = [

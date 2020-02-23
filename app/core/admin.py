@@ -9,8 +9,8 @@ from core import models
 class UserAdmin(BaseUserAdmin):
     ordering = ['id']
     readonly_fields = ('create_date',)
-    list_display = ['email', 'username', 'name', 'surname',
-                    'create_date', 'last_login']
+    list_display = ('email', 'username', 'name', 'surname',
+                    'create_date', 'last_login')
     list_filter = ('email',)
     fieldsets = (
         (None, {'fields': ('email', 'password',)}),
@@ -39,7 +39,8 @@ class CommentInline(cadmin.GenericTabularInline):
 
 
 class ArticleAdmin(admin.ModelAdmin):
-    list_display = ['id', 'create_at', 'title', 'title_h1']
+    list_display = ('id', 'create_at', 'title', 'title_h1', 'is_active',
+                    'is_delete')
     list_filter = ('id', 'title', 'title_h1')
     inlines = [
         CommentInline,
@@ -47,7 +48,8 @@ class ArticleAdmin(admin.ModelAdmin):
 
 
 class CommentAdmin(admin.ModelAdmin):
-    list_display = ['id', 'content', 'content_object']
+    list_display = ('id', 'create_at', 'content', 'content_object',
+                    'is_active', 'is_delete',)
     inlines = [
         CommentInline,
     ]
