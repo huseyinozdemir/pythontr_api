@@ -57,4 +57,5 @@ class ModelTests(TestCase):
             content='I am not thinking.....',
             email='huseyin@pythontr.com',
         )
+
         self.assertGreaterEqual(comment_reply.content_object.id, 0)

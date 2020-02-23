@@ -1,4 +1,5 @@
 from django.contrib import admin
+from django.contrib.contenttypes import admin as cadmin
 from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
 from django.utils.translation import gettext as _
 
@@ -33,6 +34,26 @@ class UserAdmin(BaseUserAdmin):
     )
 
 
+class CommentInline(cadmin.GenericTabularInline):
+    model = models.Comment
+
+
+class ArticleAdmin(admin.ModelAdmin):
+    list_display = ['id', 'create_at', 'title', 'title_h1']
+    list_filter = ('id', 'title', 'title_h1')
+    inlines = [
+        CommentInline,
+    ]
+
+
+class CommentAdmin(admin.ModelAdmin):
+    list_display = ['id', 'content', 'content_object']
+    inlines = [
+        CommentInline,
+    ]
+
+
 admin.site.register(models.User, UserAdmin)
 admin.site.register(models.Category)
-admin.site.register(models.Article)
+admin.site.register(models.Article, ArticleAdmin)
+admin.site.register(models.Comment, CommentAdmin)

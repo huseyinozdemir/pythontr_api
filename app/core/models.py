@@ -6,6 +6,7 @@ from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, \
                                        PermissionsMixin
 from django.contrib.contenttypes.fields import GenericForeignKey
 from django.contrib.contenttypes.models import ContentType
+from django.contrib.contenttypes.fields import GenericRelation
 
 from django.conf import settings
 
@@ -104,6 +105,24 @@ class Category(models.Model):
         return full_path
 
 
+class Comment(models.Model):
+    content_type = models.ForeignKey(ContentType, on_delete=models.CASCADE)
+    object_id = models.PositiveIntegerField()
+    content_object = GenericForeignKey('content_type', 'object_id')
+
+    create_at = models.DateTimeField(auto_now_add=True)
+    content = models.TextField(blank=True)
+    email = models.CharField(max_length=100)
+    name = models.CharField(max_length=50)
+    ip = models.CharField(max_length=100)
+    is_active = models.BooleanField(default=False)
+    is_delete = models.BooleanField(default=False)
+    comments = GenericRelation('self')
+
+    def __str__(self):
+        return self.content
+
+
 class Article(models.Model):
     create_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now_add=True)
@@ -115,6 +134,7 @@ class Article(models.Model):
     title_h1 = models.CharField(max_length=255)
     description = models.TextField(blank=True)
     content = models.TextField(blank=True)
+    comments = GenericRelation(Comment)
     read_count = models.IntegerField(default=0)
     user = models.ForeignKey(
         settings.AUTH_USER_MODEL, on_delete=models.SET_NULL,
@@ -131,20 +151,3 @@ class Article(models.Model):
 
     def __str__(self):
         return self.title
-
-
-class Comment(models.Model):
-    content_type = models.ForeignKey(ContentType, on_delete=models.CASCADE)
-    object_id = models.PositiveIntegerField()
-    content_object = GenericForeignKey('content_type', 'object_id')
-
-    create_at = models.DateTimeField(auto_now_add=True)
-    content = models.CharField(max_length=500)
-    email = models.CharField(max_length=100)
-    name = models.CharField(max_length=50)
-    ip = models.CharField(max_length=100)
-    is_active = models.BooleanField(default=False)
-    is_delete = models.BooleanField(default=False)
-
-    def __str__(self):
-        return self.content
