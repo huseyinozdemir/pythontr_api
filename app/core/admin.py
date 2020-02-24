@@ -51,6 +51,7 @@ class ArticleAdmin(admin.ModelAdmin):
 class CommentAdmin(admin.ModelAdmin):
     list_display = ('id', 'create_at', 'content', 'content_object',
                     'is_active', 'is_delete',)
+    list_filter = ('id', 'content')
     search_fields = ('id', 'content')
     inlines = [
         CommentInline,
