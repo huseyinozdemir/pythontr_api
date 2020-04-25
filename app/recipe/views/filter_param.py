@@ -17,9 +17,19 @@ class Search(FilterParam):
 
     def make_filter(self, objects, user, condition):
         return objects.filter(
+            subject__icontains=condition,
+            is_delete=False,
+        ).all()
+
+
+class SearchMessage(FilterParam):
+
+    def make_filter(self, objects, user, condition):
+        return objects.filter(
             Q(user=user) | Q(sender=user),
             subject__icontains=condition,
-            is_delete=False
+            is_delete=False,
+            is_sender_delete=False,
         ).all()
 
 

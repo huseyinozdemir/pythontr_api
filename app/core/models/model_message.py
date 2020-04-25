@@ -38,6 +38,7 @@ class Message(models.Model):
 
     is_read = models.BooleanField(default=False)
     is_delete = models.BooleanField(default=False)
+    is_sender_delete = models.BooleanField(default=False)
 
     objects = MessageManager()
 

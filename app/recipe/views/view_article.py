@@ -26,15 +26,15 @@ class ArticleViewSet(BaseViewSet, mixins.CreateModelMixin):
             queryset = queryset.filter(title__icontains=articles,
                                        is_active=True,
                                        is_delete=False)
+        if me:
+            request = self.request
+            if not request or not queryset:
+                return None
+            queryset = queryset.filter(user=request.user, is_delete=False)
         if self.action == 'list':
             newquery = queryset.filter(
                 is_active=True,
                 is_delete=False
             ).all().order_by('-id').distinct()
-            if me == 'true':
-                request = self.request
-                if not request or not queryset:
-                    return None
-                newquery = queryset.filter(user=request.user, is_delete=False)
             queryset = newquery
         return queryset

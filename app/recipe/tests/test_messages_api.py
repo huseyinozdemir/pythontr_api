@@ -135,11 +135,12 @@ class PrivateMessageApiTest(TestCase):
         )
 
         Message.objects.create(
-            sender=self.user,
-            user=self.sender,
+            sender=self.sender,
+            user=self.user,
             subject='re:Hello,',
             content='Thank you and you!',
             ip='127.0.0.1',
+            is_delete=True,
         )
 
         other_sender = get_user_model().objects.create_user(
@@ -197,3 +198,23 @@ class PrivateMessageApiTest(TestCase):
         res = self.client.get(MESSAGES_OUTBOX_URL)
         self.assertEqual(res.status_code, status.HTTP_200_OK)
         self.assertEqual(len(res.data), 2)
+
+    def test_get_single_messages(self):
+        Message.objects.create(
+            sender=self.sender,
+            user=self.user,
+            subject='Hello,',
+            content='How are you!',
+            ip='127.0.0.1',
+        )
+        message = Message.objects.create(
+            sender=self.sender,
+            user=self.user,
+            subject='Hello 2,',
+            content='How are you!',
+            ip='127.0.0.1',
+        )
+        url = detail_url(message.id)
+
+        res = self.client.get(url)
+        self.assertEquals(res.status_code, status.HTTP_200_OK)
