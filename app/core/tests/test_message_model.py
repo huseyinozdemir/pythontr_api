@@ -117,7 +117,7 @@ class ModelTests(TestCase):
             content='....sure...',
             ip='127.0.0.1',
         )
-        messages = Message.objects.inbox(user=user).order_by('id')
+        messages = Message.objects.filter(user=user).order_by('id')
         self.assertEqual(messages.count(), 1)
 
     def test_get_user_outbox(self):
@@ -153,5 +153,5 @@ class ModelTests(TestCase):
             content='....sure...',
             ip='127.0.0.1',
         )
-        messages = Message.objects.outbox(user=user).order_by('id')
+        messages = Message.objects.filter(sender=user).order_by('id')
         self.assertEqual(messages.count(), 2)

@@ -9,16 +9,6 @@ class MessageManager(models.Manager):
             is_delete=False
         )
 
-    def inbox(self, user):
-        return self.filter(
-            user=user,
-        )
-
-    def outbox(self, user):
-        return self.filter(
-            sender=user,
-        )
-
 
 class Message(models.Model):
     create_at = models.DateTimeField(auto_now_add=True)
