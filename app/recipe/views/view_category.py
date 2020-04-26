@@ -6,6 +6,7 @@ from core.models import Category
 from recipe import serializers
 
 from .baseview import BaseViewSet
+from .filter_param import RulesFilter, Search
 
 
 class CategoryViewSet(BaseViewSet, mixins.CreateModelMixin):
@@ -16,11 +17,25 @@ class CategoryViewSet(BaseViewSet, mixins.CreateModelMixin):
                                     'retrieve': [AllowAny]}
 
     def get_queryset(self):
-        categories = self.request.query_params.get('search')
-        queryset = self.queryset
-        if categories:
-            queryset = queryset.filter(name__icontains=categories)
-        if self.action == 'list':
-            queryset = queryset.all()
-            queryset = sorted(queryset, key=lambda x: x.full_category_name)
+        search = self.request.query_params.get('search')
+        queryset = None
+
+        SearchKwargs = {
+            '{0}__{1}'.format('name', 'icontains'): search,
+        }
+
+        rules = [
+            Search(search, **SearchKwargs),
+        ]
+
+        kwargs = {}
+
+        rf = RulesFilter(rules)
+
+        for item in rf.get_res():
+            if item.is_check():
+                kwargs.update(item.get_param())
+
+        queryset = self.queryset.filter(**kwargs).all()
+        queryset = sorted(queryset, key=lambda x: x.full_category_name)
         return queryset

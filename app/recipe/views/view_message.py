@@ -9,7 +9,7 @@ from recipe import serializers
 from recipe.permissions import IsAuthenticatedAndOwner
 
 from .baseview import BaseViewSet
-from .filter_param import SearchMessage, Inbox, Outbox, RulesFilter
+from .filter_param import RulesFilter, Search, Inbox, Outbox
 
 
 class MessageViewSet(BaseViewSet, mixins.CreateModelMixin):
@@ -25,23 +25,40 @@ class MessageViewSet(BaseViewSet, mixins.CreateModelMixin):
         search = self.request.query_params.get('search', None)
         inbox = self.request.query_params.get('inbox', None)
         outbox = self.request.query_params.get('outbox', None)
-        queryset = []
+        queryset = None
+
+        SearchKwargs = {
+            '{0}__{1}'.format('subject', 'icontains'): search,
+        }
+
+        InboxKwargs = {
+            '{0}'.format('user'): self.request.user,
+        }
+
+        OutboxKwargs = {
+            '{0}'.format('sender'): self.request.user,
+        }
+
         rules = [
-            SearchMessage(search),
-            Inbox(inbox),
-            Outbox(outbox)
+            Search(search, **SearchKwargs),
+            Inbox(inbox, **InboxKwargs),
+            Outbox(outbox, **OutboxKwargs)
         ]
+
+        kwargs = {
+            '{0}_{1}'.format('is', 'delete'): False,
+        }
+
         rf = RulesFilter(rules)
         for item in rf.get_res():
             if item.is_check():
-                queryset = item.make_filter(self.queryset,
-                                            self.request.user, search)
-        if not queryset:
-            queryset = self.queryset.filter(
-                Q(user=self.request.user) |
-                Q(sender=self.request.user),
-                is_delete=False
-            ).all().order_by('-id')
+                kwargs.update(item.get_param())
 
-        queryset = queryset.distinct("id").all()
+        queryset = self.queryset.filter(
+            **kwargs
+        ).filter(
+            Q(user=self.request.user) |
+            Q(sender=self.request.user),
+        ).all().order_by('-id').distinct("id").all()
+
         return queryset

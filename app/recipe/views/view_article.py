@@ -7,6 +7,7 @@ from recipe import serializers
 from recipe.permissions import IsAuthenticatedAndOwner
 
 from .baseview import BaseViewSet
+from .filter_param import RulesFilter, Search, Me
 
 
 class ArticleViewSet(BaseViewSet, mixins.CreateModelMixin):
@@ -19,22 +20,36 @@ class ArticleViewSet(BaseViewSet, mixins.CreateModelMixin):
     }
 
     def get_queryset(self):
-        articles = self.request.query_params.get('search', None)
+        """ self.action == 'list' """
+        search = self.request.query_params.get('search', None)
         me = self.request.query_params.get('me', None)
-        queryset = self.queryset
-        if articles:
-            queryset = queryset.filter(title__icontains=articles,
-                                       is_active=True,
-                                       is_delete=False)
-        if me:
-            request = self.request
-            if not request or not queryset:
-                return None
-            queryset = queryset.filter(user=request.user, is_delete=False)
-        if self.action == 'list':
-            newquery = queryset.filter(
-                is_active=True,
-                is_delete=False
-            ).all().order_by('-id').distinct()
-            queryset = newquery
+        queryset = None
+
+        SearchKwargs = {
+            '{0}__{1}'.format('subject', 'icontains'): search,
+        }
+
+        MeKwargs = {
+            '{0}'.format('user'): self.request.user,
+        }
+
+        rules = [
+            Search(search, **SearchKwargs),
+            Me(me, **MeKwargs)
+        ]
+
+        kwargs = {
+            '{0}_{1}'.format('is', 'active'): True,
+            '{0}_{1}'.format('is', 'delete'): False,
+        }
+
+        rf = RulesFilter(rules)
+        for item in rf.get_res():
+            if item.is_check():
+                kwargs.update(item.get_param())
+
+        queryset = self.queryset.filter(
+            **kwargs
+        ).all().order_by('-id').distinct()
+
         return queryset

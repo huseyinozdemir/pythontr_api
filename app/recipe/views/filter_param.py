@@ -1,56 +1,30 @@
-from django.db.models import Q
-
-
 class FilterParam:
 
-    def __init__(self, check):
-        self.check = check
+    def __init__(self, check, **kwargs):
+        self.check = True if check is not None else False
+        self.params = kwargs
 
     def is_check(self):
         return self.check
 
-    def make_filter(self, objects, user, condition):
-        pass
+    def get_param(self):
+        return self.params
 
 
 class Search(FilterParam):
-
-    def make_filter(self, objects, user, condition):
-        return objects.filter(
-            subject__icontains=condition,
-            is_delete=False,
-        ).all()
+    pass
 
 
-class SearchMessage(FilterParam):
-
-    def make_filter(self, objects, user, condition):
-        return objects.filter(
-            Q(user=user) | Q(sender=user),
-            subject__icontains=condition,
-            is_delete=False,
-            is_sender_delete=False,
-        ).all()
+class Me(FilterParam):
+    pass
 
 
 class Inbox(FilterParam):
-
-    def make_filter(self, objects, user, condition):
-        if condition:
-            return objects.inbox(user).filter(
-                subject__icontains=condition
-            ).all()
-        return objects.inbox(user).all()
+    pass
 
 
 class Outbox(FilterParam):
-
-    def make_filter(self, objects, user, condition):
-        if condition:
-            return objects.outbox(user).filter(
-                subject__icontains=condition
-            ).all()
-        return objects.outbox(user).all()
+    pass
 
 
 class RulesFilter:

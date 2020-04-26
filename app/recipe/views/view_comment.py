@@ -8,6 +8,7 @@ from core.models import Article, Comment
 from recipe import serializers
 
 from .baseview import BaseViewSet
+from .filter_param import RulesFilter, Search
 
 
 class CommentViewSet(BaseViewSet, mixins.CreateModelMixin):
@@ -18,21 +19,35 @@ class CommentViewSet(BaseViewSet, mixins.CreateModelMixin):
 
     def get_queryset(self):
         content_type = ContentType.objects.get_for_model(Article)
-        comments = self.request.query_params.get('search')
-        queryset = self.queryset
-        if comments:
-            queryset = queryset.filter(content__icontains=comments)
-        if self.action == 'list':
-            queryset = queryset.filter(
+        search = self.request.query_params.get('search')
+        queryset = []
+        SearchKwargs = {
+            '{0}__{1}'.format('name', 'icontains'): search,
+        }
+
+        rules = [
+            Search(search, **SearchKwargs)
+        ]
+
+        kwargs = {
+            '{0}_{1}'.format('is', 'active'): True,
+            '{0}_{1}'.format('is', 'delete'): False,
+            '{0}_{1}'.format('content', 'type'): content_type,
+            '{0}__{1}'.format('object_id', 'in'): Article.objects.filter(
                 is_active=True,
-                is_delete=False,
-                # only active articles
-                content_type=content_type,
-                object_id__in=Article.objects.filter(
-                    is_active=True,
-                    is_delete=False
-                ).all()
-            ).all().order_by('-id')
+                is_delete=False
+            ).all(),
+        }
+
+        rf = RulesFilter(rules)
+        for item in rf.get_res():
+            if item.is_check():
+                kwargs.update(item.get_param())
+
+        queryset = self.queryset.filter(
+            **kwargs
+        ).all().order_by('-id')
+
         return queryset
 
     def perform_create(self, serializer):
