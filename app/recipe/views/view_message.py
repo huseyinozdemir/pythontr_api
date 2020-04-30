@@ -18,7 +18,7 @@ class MessageViewSet(BaseViewSet, mixins.CreateModelMixin):
     permission_classes_by_action = {
         'list': [IsAuthenticatedAndOwner],
         'retrieve': [IsAuthenticatedAndOwner],
-        'create': [IsAuthenticated],
+        'create': [IsAuthenticated]
     }
 
     def get_queryset(self):

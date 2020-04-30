@@ -1,4 +1,4 @@
-from rest_framework.permissions import BasePermission
+from rest_framework.permissions import BasePermission, SAFE_METHODS
 
 from core.models import Article
 
@@ -10,8 +10,12 @@ class IsAuthenticatedAndOwner(BasePermission):
         return bool(request.user and request.user.is_authenticated)
 
     def has_object_permission(self, request, view, obj):
+
+        if request.method in SAFE_METHODS:
+            return True
+
         if hasattr(obj, 'user'):
-            return obj.user == request.user
+            return obj.user.id == request.user.id
         else:
             return False
 
