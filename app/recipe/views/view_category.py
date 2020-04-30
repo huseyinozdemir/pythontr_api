@@ -1,5 +1,6 @@
 from rest_framework import mixins
-from rest_framework.permissions import AllowAny, IsAdminUser
+from rest_framework.permissions import (IsAuthenticatedOrReadOnly,
+                                        IsAdminUser)
 
 from core.models import Category
 
@@ -13,8 +14,8 @@ class CategoryViewSet(BaseViewSet, mixins.CreateModelMixin):
     queryset = Category.objects.all()
     serializer_class = serializers.CategorySerializer
     permission_classes_by_action = {'create': [IsAdminUser],
-                                    'list': [AllowAny],
-                                    'retrieve': [AllowAny]}
+                                    'list': [IsAuthenticatedOrReadOnly],
+                                    'retrieve': [IsAuthenticatedOrReadOnly]}
 
     def get_queryset(self):
         search = self.request.query_params.get('search')

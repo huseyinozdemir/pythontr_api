@@ -1,5 +1,6 @@
 from rest_framework import mixins
-from rest_framework.permissions import IsAuthenticated, AllowAny
+from rest_framework.permissions import (IsAuthenticated,
+                                        IsAuthenticatedOrReadOnly)
 
 from core.models import Article
 
@@ -14,7 +15,8 @@ class ArticleViewSet(BaseViewSet, mixins.CreateModelMixin):
     queryset = Article.objects.all()
     serializer_class = serializers.ArticleSerializer
     permission_classes_by_action = {
-        'list': [AllowAny], 'retrieve': [AllowAny],
+        'list': [IsAuthenticatedOrReadOnly],
+        'retrieve': [IsAuthenticatedOrReadOnly],
         'create': [IsAuthenticated],
         'update': [IsAuthenticatedAndOwner],
     }
