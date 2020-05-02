@@ -14,6 +14,7 @@ def test_user_other(email='testarticleother@hotmail.com', password='123qwe'):
 
 
 def test_category(name='Python Article Programlama',
+                  title='Python Öğren',
                   short_name='python article'):
     return Category.objects.create(
         user=test_user(),

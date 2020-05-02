@@ -37,10 +37,12 @@ class PrivateCategoryApiTests(TestCase):
 
     def test_retrieve_categories(self):
         Category.objects.create(
-            user=self.user, name='python programlama', short_name='python'
+            user=self.user, name='python programlama',
+            title="tikla ve ogren", short_name='python'
         )
         Category.objects.create(
-            user=self.user, name='linux sistemleri', short_name='linux'
+            user=self.user, name='linux sistemleri',
+            title="Linux sistemleri pythontr.com'da", short_name='linux'
         )
 
         res = self.client.get(CATEGORIES_URL)
@@ -56,9 +58,11 @@ class PrivateCategoryApiTests(TestCase):
             '123qwe'
         )
         Category.objects.create(user=user2, name='c# programlama',
+                                title="C# Programlama....",
                                 short_name='c#')
         category = Category.objects.create(
-            user=self.user, name="veritabani mysql", short_name='mysql'
+            user=self.user, name="veritabani mysql", title="Veritabanı mysql",
+            short_name='mysql'
         )
 
         res = self.client.get(CATEGORIES_URL)
@@ -68,12 +72,17 @@ class PrivateCategoryApiTests(TestCase):
         self.assertEqual(res.data[1]['name'], category.name)
 
     def test_create_category_successful(self):
-        content = {'name': 'python programlama', 'short_name': 'Python'}
+        content = {
+                   'name': 'python ile programlama',
+                   'title': 'Python ile programla',
+                   'title_h1': 'Python programlama...',
+                   'short_name': 'Python'}
         self.user.is_staff = True
         self.client.post(CATEGORIES_URL, content)
         exists = Category.objects.filter(
             user=self.user,
-            name=content['name']
+            name=content['name'],
+            title=content['title'],
         ).exists()
         self.assertTrue(exists)
 
