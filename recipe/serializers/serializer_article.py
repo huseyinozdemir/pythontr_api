@@ -11,8 +11,9 @@ class ArticleSerializer(serializers.ModelSerializer):
     class Meta:
         model = Article
         fields = ('id', 'categories', 'title', 'title_h1',
-                  'description', 'content', 'read_count', 'user',
+                  'description', 'content', 'read_count', 'slug', 'user',
                   'is_active', 'is_approval', 'approval_user', 'is_delete',
-                  'comments',)
-        reod_only_fields = ('id', 'is_delete', 'is_active', 'read_count',
-                            'comments',)
+                  'comments', 'create_at', 'updated_at')
+        reod_only_fields = ('id', 'is_delete', 'is_active', 'slug',
+                            'read_count', 'comments',
+                            'create_at', 'updated_at')

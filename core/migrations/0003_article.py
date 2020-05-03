@@ -28,6 +28,7 @@ class Migration(migrations.Migration):
                 ('is_delete', models.BooleanField(default=False)),
                 ('approval_user', models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.SET_NULL, related_name='approval_user', to=settings.AUTH_USER_MODEL)),
                 ('categories', models.ManyToManyField(related_name='article', to='core.Category')),
+                ('slug', models.SlugField(unique=True, max_length=150, editable=False)),
                 ('user', models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.SET_NULL, to=settings.AUTH_USER_MODEL)),
             ],
         ),

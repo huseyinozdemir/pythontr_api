@@ -2,10 +2,13 @@ from django.db import models
 
 from django.conf import settings
 
+from django.utils import timezone
 from django.utils.text import slugify
 
 
 class Category(models.Model):
+    create_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now_add=True)
     name = models.CharField(max_length=255, unique=True)
     title = models.CharField(max_length=255, unique=True)
     title_h1 = models.CharField(max_length=255)
@@ -38,6 +41,7 @@ class Category(models.Model):
         if not self.title_h1:
             self.title_h1 = self.title
 
+        self.updated_at = timezone.now()
         self.slug = self.get_slug()
 
         return super(Category, self).save(*args, **kwargs)
