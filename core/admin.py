@@ -8,9 +8,9 @@ from core import models
 
 class UserAdmin(BaseUserAdmin):
     ordering = ['id']
-    readonly_fields = ('create_date',)
+    readonly_fields = ('create_at', 'slug')
     list_display = ('email', 'username', 'name', 'surname',
-                    'create_date', 'last_login')
+                    'create_at', 'updated_at',  'last_login')
     list_filter = ('email',)
     fieldsets = (
         (None, {'fields': ('email', 'password',)}),
@@ -23,7 +23,7 @@ class UserAdmin(BaseUserAdmin):
         ),
         (
             _('Important dates'),
-            {'fields': ('last_login', 'create_date',)}
+            {'fields': ('last_login', 'create_at',)}
         ),
     )
     add_fieldsets = (

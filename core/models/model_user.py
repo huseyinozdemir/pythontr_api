@@ -7,6 +7,9 @@ from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, \
 
 from django.conf import settings
 
+from django.utils import timezone
+from django.utils.text import slugify
+
 
 def avatar_image_file_path(instance, filename):
     ext = filename.split('.')[-1]
@@ -56,11 +59,32 @@ class User(AbstractBaseUser, PermissionsMixin):
     is_staff = models.BooleanField(default=False)
     is_ban = models.BooleanField(default=False)
     is_delete = models.BooleanField(default=False)
-    create_date = models.DateTimeField(auto_now_add=True)
+    slug = models.SlugField(unique=True, max_length=150, editable=False)
+    create_at = models.DateTimeField(auto_now_add=True, editable=False)
+    updated_at = models.DateTimeField(auto_now_add=True)
 
     objects = UserManager()
 
     USERNAME_FIELD = 'email'
+
+    def get_slug(self):
+        slug = slugify(self.username.replace('ı', 'i'))
+        unique = slug
+        number = 1
+
+        while User.objects.filter(slug=unique).exists():
+            unique = '{}-{}'.format(slug, number)
+            number += 1
+
+        return unique
+
+    def save(self, *args, **kwargs):
+        if not self.username:
+            self.username = self.email.split('@')[0]
+        self.updated_at = timezone.now()
+        self.slug = self.get_slug()
+
+        return super(User, self).save(*args, **kwargs)
 
     @property
     def image_url(self):

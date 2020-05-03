@@ -12,7 +12,9 @@ class UserSerializer(serializers.ModelSerializer):
         fields = (
             'email', 'password', 'username', 'name', 'surname', 'image',
             'about_me', 'linkedin', 'is_notification_email', 'image_url',
+            'slug',
         )
+        reod_only_fields = ('id', 'slug')
         extra_kwargs = {'password': {'write_only': True, 'min_length': 5}}
 
     def create(self, validated_data):
