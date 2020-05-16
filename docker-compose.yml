@@ -19,6 +19,8 @@ services:
             - DB_PASS=supersecretpassword
         depends_on:
             - db
+        networks:
+            - pythontr-api-network
 
     db:
         image: postgres:10-alpine
@@ -26,3 +28,9 @@ services:
             - POSTGRES_DB=app
             - POSTGRES_USER=postgres
             - POSTGRES_PASSWORD=supersecretpassword
+        networks:
+            - pythontr-api-network
+
+networks:
+    pythontr-api-network:
+        driver: bridge
