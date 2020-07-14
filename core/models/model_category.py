@@ -12,15 +12,15 @@ class Category(models.Model):
     name = models.CharField(max_length=255, unique=True)
     title = models.CharField(max_length=255, unique=True)
     title_h1 = models.CharField(max_length=255)
-    description = models.TextField(blank=True)
-    content = models.TextField(blank=True)
+    description = models.TextField(blank=True, null=True)
+    content = models.TextField(blank=True, null=True)
     short_name = models.CharField(max_length=100, unique=True)
     parent_category = models.ForeignKey(
         'self', on_delete=models.SET_NULL,
         null=True, blank=True
     )
     slug = models.SlugField(unique=True, max_length=150, editable=False)
-    sort = models.SmallIntegerField(default=0)
+    sort = models.SmallIntegerField(default=0, null=True)
     user = models.ForeignKey(
         settings.AUTH_USER_MODEL, on_delete=models.SET_NULL,
         null=True, blank=True

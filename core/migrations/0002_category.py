@@ -3,6 +3,7 @@
 import core.models
 from django.conf import settings
 from django.db import migrations, models
+from datetime import datetime
 import django.db.models.deletion
 
 
@@ -27,13 +28,29 @@ class Migration(migrations.Migration):
                 ('name', models.CharField(max_length=255, unique=True)),
                 ('title', models.CharField(max_length=255, unique=True)),
                 ('title_h1', models.CharField(max_length=255)),
-                ('description', models.TextField(blank=True)),
-                ('content', models.TextField(blank=True)),
+                ('description', models.TextField(blank=True, null=True)),
+                ('content', models.TextField(blank=True, null=True)),
                 ('short_name', models.CharField(max_length=100, unique=True)),
                 ('slug', models.SlugField(unique=True, max_length=150, editable=False)),
-                ('sort', models.SmallIntegerField(default=0)),
+                ('sort', models.SmallIntegerField(default=0, null=True)),
                 ('parent_category', models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.SET_NULL, to='core.Category')),
                 ('user', models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.SET_NULL, to=settings.AUTH_USER_MODEL)),
+            ],
+        ),
+        migrations.RunSQL(
+            sql=[
+                ("""INSERT INTO core_Category (name, title, title_h1, short_name, slug, create_at, updated_at) 
+                VALUES (%s, %s, %s, %s, %s, %s, %s);""",
+                ['Programlama', 'Programlama Dilleri', 'Programlama Dilleri Hakkında', 'Programlama', 'programlama', datetime.now(), datetime.now()]),
+                ("""INSERT INTO core_Category (name, title, title_h1, short_name, slug, create_at, updated_at) 
+                VALUES (%s, %s, %s, %s, %s, %s, %s);""",
+                ['Veritabanı', 'Veritabanları', 'Veritabanları Hakkında', 'Veritabanı', 'veritabani', datetime.now(), datetime.now()]),
+                ("""INSERT INTO core_Category (name, title, title_h1, short_name, slug, create_at, updated_at) 
+                VALUES (%s, %s, %s, %s, %s, %s, %s);""",
+                ['Sistemler / Dağıtımlar', 'Sistemler ve Dağıtımlar', 'İşletim sistemleri ve dağıtımlar hakkında', 'Sistemler', 'sistemler-dagitimlar', datetime.now(), datetime.now()]),
+                ("""INSERT INTO core_Category (name, title, title_h1, short_name, slug, create_at, updated_at) 
+                VALUES (%s, %s, %s, %s, %s, %s, %s);""",
+                ['Haberler', 'Teknoloji Haberleri', 'Teknoloji haberleri hakkında', 'teknoloji', 'teknoloji-haberleri', datetime.now(), datetime.now()]),
             ],
         ),
     ]

@@ -68,8 +68,8 @@ class PrivateCategoryApiTests(TestCase):
         res = self.client.get(CATEGORIES_URL)
 
         self.assertEqual(res.status_code, status.HTTP_200_OK)
-        self.assertEqual(len(res.data), 2)
-        self.assertEqual(res.data[1]['name'], category.name)
+        self.assertEqual(len(res.data), 6)  # Add items for 4 default
+        self.assertEqual(res.data[len(res.data)-1]['name'], category.name)
 
     def test_create_category_successful(self):
         content = {
