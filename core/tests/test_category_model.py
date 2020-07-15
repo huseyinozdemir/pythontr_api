@@ -27,7 +27,7 @@ class ModelTests(TestCase):
     def test_catgory_name_uniqe_check(self):
         models.Category.objects.create(
             user=test_user(),
-            name='Python',
+            name='PythonTest',
             short_name='python',
         )
         with self.assertRaises(IntegrityError):
