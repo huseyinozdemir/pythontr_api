@@ -1,9 +1,11 @@
-version: "3"
+version: "3.9"
 
 services:
     app:
         build:
             context: .
+            args:
+                - DEV=true
         ports:
             - "8000:8000"
         volumes:
@@ -23,7 +25,9 @@ services:
             - api-network
 
     db:
-        image: postgres:10-alpine
+        image: postgres:13-alpine
+        volumes:
+            - ./data/:/var/lib/postgresql/data
         environment:
             - POSTGRES_DB=app
             - POSTGRES_USER=postgres
