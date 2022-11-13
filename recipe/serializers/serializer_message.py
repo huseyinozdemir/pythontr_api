@@ -9,4 +9,4 @@ class MessageSerializer(serializers.ModelSerializer):
         model = Message
         fields = ('id', 'create_at', 'sender', 'user', 'subject', 'content',
                   'ip', 'is_read', 'is_delete',)
-        reod_only_fields = ('id',)
+        read_only_fields = ('id',)

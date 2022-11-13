@@ -27,4 +27,4 @@ class CategorySerializer(serializers.ModelSerializer):
                   'description', 'content', 'slug', 'short_name',
                   'full_category_name', 'create_at', 'updated_at',
                   'categories',)
-        reod_only_fields = ('id', 'create_at', 'updated_at', 'slug')
+        read_only_fields = ('id', 'create_at', 'updated_at', 'slug')

@@ -14,6 +14,6 @@ class ArticleSerializer(serializers.ModelSerializer):
                   'description', 'content', 'read_count', 'slug', 'user',
                   'is_active', 'is_approval', 'approval_user', 'is_delete',
                   'comments', 'create_at', 'updated_at')
-        reod_only_fields = ('id', 'is_delete', 'is_active', 'slug',
+        read_only_fields = ('id', 'is_delete', 'is_active', 'slug',
                             'read_count', 'comments',
                             'create_at', 'updated_at')
