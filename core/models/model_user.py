@@ -1,6 +1,3 @@
-import uuid
-import os
-
 from django.db import models
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, \
                                        PermissionsMixin
@@ -12,10 +9,13 @@ from django.utils.text import slugify
 
 
 def avatar_image_file_path(instance, filename):
-    ext = filename.split('.')[-1]
-    filename = f'{uuid.uuid4()}.{ext}'
-
-    return os.path.join(settings.AVATAR_ROOT, filename)
+    f_name, ext = filename.split('.')
+    allowed_chars = \
+        "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-._"
+    sanitized_filename = ''.join(c for c in f_name if c in allowed_chars)
+    slug = slugify(sanitized_filename)
+    file_path = f'{settings.AVATAR_ROOT}{instance.pk}/{slug}.{ext}'
+    return file_path
 
 
 def validate_user(**kwargs):

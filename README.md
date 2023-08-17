@@ -17,6 +17,8 @@ Tips:
 * docker-compose run app sh -c "python manage.py makemigrations" # Make migrations
 * docker-compose run app sh -c "python manage.py createsuperuser" # Create superuser
 * docker-compose run app sh -c "python manage.py test && flake8" # Test
+* docker-compose run app sh -c "python manage.py collectstatic" # Create css ext.
+
 
 Git Hooks Install for quality check on codes
 ---

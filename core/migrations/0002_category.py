@@ -39,55 +39,55 @@ class Migration(migrations.Migration):
         ),
         migrations.RunSQL(
             sql=[
-                ("""INSERT INTO core_Category (name, title, title_h1, short_name, slug, create_at, updated_at) 
+                ("""INSERT INTO core_category (name, title, title_h1, short_name, slug, create_at, updated_at) 
                 VALUES (%s, %s, %s, %s, %s, %s, %s);""",
                 ['Programlama', 'Programlama Dilleri', 'Programlama Dilleri Hakkında', 'Programlama', 'programlama', datetime.now(), datetime.now()]),
-                ("""INSERT INTO core_Category (name, title, title_h1, short_name, slug, create_at, updated_at) 
+                ("""INSERT INTO core_category (name, title, title_h1, short_name, slug, create_at, updated_at) 
                 VALUES (%s, %s, %s, %s, %s, %s, %s);""",
                 ['Veritabanı', 'Veritabanları', 'Veritabanları Hakkında', 'Veritabanı', 'veritabani', datetime.now(), datetime.now()]),
-                ("""INSERT INTO core_Category (name, title, title_h1, short_name, slug, create_at, updated_at) 
+                ("""INSERT INTO core_category (name, title, title_h1, short_name, slug, create_at, updated_at) 
                 VALUES (%s, %s, %s, %s, %s, %s, %s);""",
                 ['Sistemler / Dağıtımlar', 'Sistemler ve Dağıtımlar', 'İşletim sistemleri ve dağıtımlar hakkında', 'Sistemler', 'sistemler-dagitimlar', datetime.now(), datetime.now()]),
-                ("""INSERT INTO core_Category (name, title, title_h1, short_name, slug, create_at, updated_at) 
+                ("""INSERT INTO core_category (name, title, title_h1, short_name, slug, create_at, updated_at) 
                 VALUES (%s, %s, %s, %s, %s, %s, %s);""",
                 ['Haberler', 'Teknoloji Haberleri', 'Teknoloji haberleri hakkında', 'teknoloji', 'teknoloji-haberleri', datetime.now(), datetime.now()]),
-                ("""INSERT INTO core_Category (name, title, title_h1, short_name, slug, create_at, updated_at, parent_category_id) 
+                ("""INSERT INTO core_category (name, title, title_h1, short_name, slug, create_at, updated_at, parent_category_id) 
                 VALUES (%s, %s, %s, %s, %s, %s, %s, %s);""",
                 ['Python', 'Python Programlama Dili', 'Python Programlama Dili Hakkında', 'Python', 'python', datetime.now(), datetime.now(), '1']),
-                ("""INSERT INTO core_Category (name, title, title_h1, short_name, slug, create_at, updated_at, parent_category_id) 
+                ("""INSERT INTO core_category (name, title, title_h1, short_name, slug, create_at, updated_at, parent_category_id) 
                 VALUES (%s, %s, %s, %s, %s, %s, %s, %s);""",
                 ['Php', 'Php Programlama Dili', 'Php Programlama Dili Hakkında', 'Php', 'php', datetime.now(), datetime.now(), '1']),
-                ("""INSERT INTO core_Category (name, title, title_h1, short_name, slug, create_at, updated_at, parent_category_id) 
+                ("""INSERT INTO core_category (name, title, title_h1, short_name, slug, create_at, updated_at, parent_category_id) 
                 VALUES (%s, %s, %s, %s, %s, %s, %s, %s);""",
                 ['Go', 'Go Programlama Dili', 'Go Programlama Dili Hakkında', 'Go', 'go', datetime.now(), datetime.now(), '1']),
                 ("""INSERT INTO core_Category (name, title, title_h1, short_name, slug, create_at, updated_at, parent_category_id) 
                 VALUES (%s, %s, %s, %s, %s, %s, %s, %s);""",
                 ['C#', 'C# Programlama Dili', 'C# Programlama Dili Hakkında', 'C#', 'c-sharp', datetime.now(), datetime.now(), '1']),
-                ("""INSERT INTO core_Category (name, title, title_h1, short_name, slug, create_at, updated_at, parent_category_id) 
+                ("""INSERT INTO core_category (name, title, title_h1, short_name, slug, create_at, updated_at, parent_category_id) 
                 VALUES (%s, %s, %s, %s, %s, %s, %s, %s);""",
                 ['Java Script', 'Java Script Programlama Dili', 'Java Script Programlama Frameworkleri', 'Java Script', 'javascript', datetime.now(), datetime.now(), '1']),
-                ("""INSERT INTO core_Category (name, title, title_h1, short_name, slug, create_at, updated_at, parent_category_id) 
+                ("""INSERT INTO core_category (name, title, title_h1, short_name, slug, create_at, updated_at, parent_category_id) 
                 VALUES (%s, %s, %s, %s, %s, %s, %s, %s);""",
                 ['Mobil Programlama', 'Mobil Programlama Dilleri', 'Mobil Programlama', 'Mobil Programlama', 'mobil', datetime.now(), datetime.now(), '1']),
-                ("""INSERT INTO core_Category (name, title, title_h1, short_name, slug, create_at, updated_at, parent_category_id) 
+                ("""INSERT INTO core_category (name, title, title_h1, short_name, slug, create_at, updated_at, parent_category_id) 
                 VALUES (%s, %s, %s, %s, %s, %s, %s, %s);""",
                 ['MySql / MariaDb', 'MySql ve MariaDb veritabanları', 'MySql ve MariaDb Veritabanları Hakkında', 'MySql / MariaDb', 'mysql-mariadb', datetime.now(), datetime.now(), '2']),
-                ("""INSERT INTO core_Category (name, title, title_h1, short_name, slug, create_at, updated_at, parent_category_id) 
+                ("""INSERT INTO core_category (name, title, title_h1, short_name, slug, create_at, updated_at, parent_category_id) 
                 VALUES (%s, %s, %s, %s, %s, %s, %s, %s);""",
                 ['MsSql', 'MsSql Veritabanı', 'MsSql Veritabanı Hakkında', 'MsSql', 'mssql', datetime.now(), datetime.now(), '2']), 
-                ("""INSERT INTO core_Category (name, title, title_h1, short_name, slug, create_at, updated_at, parent_category_id) 
+                ("""INSERT INTO core_category (name, title, title_h1, short_name, slug, create_at, updated_at, parent_category_id) 
                 VALUES (%s, %s, %s, %s, %s, %s, %s, %s);""",
                 ['PostgreSql', 'PostgreSql Veritabanı', 'PostgreSql Veritabanı Hakkında', 'PostgreSql', 'postgresql', datetime.now(), datetime.now(), '2']),
-                ("""INSERT INTO core_Category (name, title, title_h1, short_name, slug, create_at, updated_at, parent_category_id) 
+                ("""INSERT INTO core_category (name, title, title_h1, short_name, slug, create_at, updated_at, parent_category_id) 
                 VALUES (%s, %s, %s, %s, %s, %s, %s, %s);""",
                 ['Oracle', 'Oracle Veritabanı', 'Oracle Veritabanı Hakkında', 'Oracle', 'oracle', datetime.now(), datetime.now(), '2']),
-                ("""INSERT INTO core_Category (name, title, title_h1, short_name, slug, create_at, updated_at, parent_category_id) 
+                ("""INSERT INTO core_category (name, title, title_h1, short_name, slug, create_at, updated_at, parent_category_id) 
                 VALUES (%s, %s, %s, %s, %s, %s, %s, %s);""",
                 ['Linux', 'Linux İşletim Sistemleri', 'Debian \ Ubuntu \ Pardus vb', 'Linux', 'linux', datetime.now(), datetime.now(), '3']),
-                 ("""INSERT INTO core_Category (name, title, title_h1, short_name, slug, create_at, updated_at, parent_category_id) 
+                 ("""INSERT INTO core_category (name, title, title_h1, short_name, slug, create_at, updated_at, parent_category_id) 
                 VALUES (%s, %s, %s, %s, %s, %s, %s, %s);""",
                 ['OS', 'MacOs ve Ios', 'MacOs ve Ios İşletim Sistemleri', 'macos', 'macos-ios', datetime.now(), datetime.now(), '3']),
-                ("""INSERT INTO core_Category (name, title, title_h1, short_name, slug, create_at, updated_at, parent_category_id) 
+                ("""INSERT INTO core_category (name, title, title_h1, short_name, slug, create_at, updated_at, parent_category_id) 
                 VALUES (%s, %s, %s, %s, %s, %s, %s, %s);""",
                 ['Windows X', 'Windows İşletim Sistemleri', 'Windows İşletim Sistemi', 'Windows', 'windows', datetime.now(), datetime.now(), '3']),
             ],
