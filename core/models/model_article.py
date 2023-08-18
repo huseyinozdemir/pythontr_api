@@ -10,6 +10,16 @@ from .model_category import Category
 from .model_comment import Comment
 
 
+def article_image_file_path(instance, filename):
+    f_name, ext = filename.split('.')
+    allowed_chars = \
+        "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-._"
+    sanitized_filename = ''.join(c for c in f_name if c in allowed_chars)
+    slug = slugify(sanitized_filename)
+    file_path = f'{settings.AVATAR_ROOT}{instance.pk}/{slug}.{ext}'
+    return file_path
+
+
 class Article(models.Model):
     create_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now_add=True)
@@ -21,6 +31,8 @@ class Article(models.Model):
     title_h1 = models.CharField(max_length=255)
     description = models.TextField(blank=True)
     content = models.TextField(blank=True)
+    image = models.ImageField(null=True, upload_to=article_image_file_path,
+                              blank=True)
     comments = GenericRelation(Comment)
     read_count = models.IntegerField(default=0)
     slug = models.SlugField(unique=True, max_length=150, editable=False)
@@ -59,3 +71,10 @@ class Article(models.Model):
 
     def __str__(self):
         return self.title
+
+    @property
+    def image_url(self):
+        image_url = None
+        if self.image:
+            image_url = self.image.url.replace(settings.APLICATION_NAME, '')
+        return image_url

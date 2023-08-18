@@ -32,9 +32,9 @@ services:
             - POSTGRES_DB=app
             - POSTGRES_USER=postgres
             - POSTGRES_PASSWORD=supersecretpassword
+        command: postgres -c hba_file=/var/lib/postgresql/data/pg_hba.conf
         networks:
             - api-network
-
 networks:
     api-network:
         driver: bridge

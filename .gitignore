@@ -130,3 +130,8 @@ dmypy.json
 
 # Postgre
 data/
+
+# Static
+static/admin/
+static/avatar/
+static/rest_framework/
