@@ -14,8 +14,8 @@ EXPOSE 8000
 # Added two lines after that for warnings
 ARG DEV=false
 RUN apk update
-RUN apk add --update --no-cache postgresql-client jpeg-dev
-RUN apk add --update --no-cache --virtual .tmp-build-deps \
+RUN apk add --update --no-cache postgresql-client jpeg-dev gettext && \
+    apk add --update --no-cache --virtual .tmp-build-deps \
     gcc libc-dev linux-headers postgresql-dev musl-dev zlib zlib-dev
 RUN python -m venv /venv && \
     /venv/bin/pip install --upgrade pip && \

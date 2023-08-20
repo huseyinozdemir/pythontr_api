@@ -6,29 +6,45 @@ from rest_framework import serializers
 
 class UserSerializer(serializers.ModelSerializer):
     image_url = serializers.ReadOnlyField()
+    confirm_password = serializers.CharField(
+        write_only=True,
+        required=True,
+        style={'input_type': 'password'}
+    )
 
     class Meta:
         model = get_user_model()
         fields = (
-            'email', 'password', 'username', 'name', 'surname', 'image',
-            'about_me', 'linkedin', 'is_notification_email', 'image_url',
-            'slug',
+            'email', 'password', 'confirm_password', 'username', 'name',
+            'surname', 'image', 'about_me', 'linkedin',
+            'is_notification_email', 'image_url', 'slug',
         )
         read_only_fields = ('id', 'slug')
         extra_kwargs = {'password': {'write_only': True, 'min_length': 5}}
 
+    def validate(self, data):
+        password = data.get('password')
+        confirm_password = data.get('confirm_password')
+
+        if password != confirm_password:
+            raise serializers.ValidationError(_("Passwords do not match"))
+
+        return data
+
     def create(self, validated_data):
-        return get_user_model().objects.create_user(**validated_data)
+        password = validated_data.pop('password')
+        validated_data.pop('confirm_password')
+        return get_user_model().objects.create_user(
+            password=password,
+            **validated_data
+        )
 
     def update(self, instance, validated_data):
         password = validated_data.pop('password', None)
-        user = super().update(instance, validated_data)
-
+        validated_data.pop('confirm_password')
         if password:
-            user.set_password(password)
-            user.save()
-
-        return user
+            instance.set_password(password)
+        return super().update(instance, validated_data)
 
 
 class AuthTokenSerializer(serializers.Serializer):

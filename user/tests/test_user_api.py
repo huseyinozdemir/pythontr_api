@@ -24,7 +24,8 @@ class PublicUserApiTests(TestCase):
         payload = {
             'email': 'test@hotmail.com',
             'password': '123qwe',
-            'name': 'huseyin',
+            'confirm_password': '123qwe',
+            'name': 'huseyin'
         }
         res = self.client.post(CREATE_USER_URL, payload)
         self.assertEqual(res.status_code, status.HTTP_201_CREATED)
@@ -112,7 +113,8 @@ class PrivateUserApiTests(TestCase):
         self.assertEqual(res.status_code, status.HTTP_405_METHOD_NOT_ALLOWED)
 
     def test_update_user_profile(self):
-        payload = {'name': 'yeni isim', 'password': '123qwe'}
+        payload = {'name': 'yeni isim', 'password': '123qwe',
+                   'confirm_password': '123qwe'}
 
         res = self.client.patch(ME_URL, payload)
 
