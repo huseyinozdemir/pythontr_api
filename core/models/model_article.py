@@ -21,7 +21,7 @@ def article_image_file_path(instance, filename):
 
 
 class Article(models.Model):
-    create_at = models.DateTimeField(auto_now_add=True)
+    created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now_add=True)
     categories = models.ManyToManyField(
         Category,

@@ -49,3 +49,6 @@ msgstr "Makale başarıyla oluşturuldu."
 #: user/serializers.py:31
 msgid "Passwords do not match"
 msgstr "Şifreler eşleşmiyor"
+
+msgid "reCAPTCHA verification failed"
+msgstr "reCAPTCHA doğrulaması başarısız oldu."

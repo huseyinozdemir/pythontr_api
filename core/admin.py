@@ -8,9 +8,9 @@ from core import models
 
 class UserAdmin(BaseUserAdmin):
     ordering = ['id']
-    readonly_fields = ('create_at', 'slug')
+    readonly_fields = ('created_at', 'slug')
     list_display = ('email', 'username', 'name', 'surname',
-                    'create_at', 'updated_at',  'last_login')
+                    'created_at', 'updated_at',  'last_login')
     list_filter = ('email',)
     fieldsets = (
         (None, {'fields': ('email', 'password',)}),
@@ -23,7 +23,7 @@ class UserAdmin(BaseUserAdmin):
         ),
         (
             _('Important dates'),
-            {'fields': ('last_login', 'create_at',)}
+            {'fields': ('last_login', 'created_at',)}
         ),
     )
     add_fieldsets = (
@@ -39,7 +39,7 @@ class CommentInline(cadmin.GenericTabularInline):
 
 
 class ArticleAdmin(admin.ModelAdmin):
-    list_display = ('id', 'create_at', 'title', 'title_h1', 'is_active',
+    list_display = ('id', 'created_at', 'title', 'title_h1', 'is_active',
                     'is_delete')
     list_filter = ('id', 'title', 'title_h1')
     search_fields = ('id', 'title', 'title_h1')
@@ -49,7 +49,7 @@ class ArticleAdmin(admin.ModelAdmin):
 
 
 class CommentAdmin(admin.ModelAdmin):
-    list_display = ('id', 'create_at', 'content', 'content_object',
+    list_display = ('id', 'created_at', 'content', 'content_object',
                     'is_active', 'is_delete',)
     list_filter = ('id', 'content')
     search_fields = ('id', 'content')

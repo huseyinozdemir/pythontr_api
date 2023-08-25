@@ -11,7 +11,7 @@ class MessageManager(models.Manager):
 
 
 class Message(models.Model):
-    create_at = models.DateTimeField(auto_now_add=True)
+    created_at = models.DateTimeField(auto_now_add=True)
     sender = models.ForeignKey(
         settings.AUTH_USER_MODEL, related_name='sender_user',
         on_delete=models.SET_NULL, null=True, blank=True

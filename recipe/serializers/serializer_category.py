@@ -10,7 +10,7 @@ class CategoryReleatedSerializer(serializers.ModelSerializer):
         fields = (
             'id', 'parent_category', 'name', 'title', 'title_h1',
             'description', 'content', 'slug', 'short_name',
-            'full_category_name', 'create_at', 'updated_at',
+            'full_category_name', 'created_at', 'updated_at',
         )
 
 
@@ -25,6 +25,6 @@ class CategorySerializer(serializers.ModelSerializer):
         model = Category
         fields = ('id', 'parent_category', 'name', 'title', 'title_h1',
                   'description', 'content', 'slug', 'short_name',
-                  'full_category_name', 'create_at', 'updated_at',
+                  'full_category_name', 'created_at', 'updated_at',
                   'categories',)
-        read_only_fields = ('id', 'create_at', 'updated_at', 'slug')
+        read_only_fields = ('id', 'created_at', 'updated_at', 'slug')

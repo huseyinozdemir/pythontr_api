@@ -49,3 +49,6 @@ msgstr "Article created successfully."
 #: user/serializers.py:31
 msgid "Passwords do not match"
 msgstr "Passwords do not match"
+
+msgid "reCAPTCHA verification failed"
+msgstr "reCAPTCHA verification failed."

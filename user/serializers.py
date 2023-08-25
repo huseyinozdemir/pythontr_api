@@ -1,3 +1,7 @@
+import sys
+import requests
+
+from django.conf import settings
 from django.contrib.auth import get_user_model, authenticate
 from django.utils.translation import ugettext_lazy as _
 
@@ -11,16 +15,39 @@ class UserSerializer(serializers.ModelSerializer):
         required=True,
         style={'input_type': 'password'}
     )
+    if not settings.DEBUG and 'test' not in sys.argv:
+        captcha = serializers.CharField(write_only=True, required=True)
+
+        def validate_captcha(self, value):
+            recaptcha_url = "https://www.google.com/recaptcha/api/siteverify"
+            payload = {
+                "secret": settings.RECAPTCHA_SECRET_KEY,
+                "response": value
+            }
+            response = requests.post(recaptcha_url, data=payload)
+            result = response.json()
+
+            if not result.get("success"):
+                raise serializers.ValidationError(
+                    _("reCAPTCHA verification failed"))
+
+            return value
 
     class Meta:
         model = get_user_model()
-        fields = (
-            'email', 'password', 'confirm_password', 'username', 'name',
-            'surname', 'image', 'about_me', 'linkedin',
-            'is_notification_email', 'image_url', 'slug',
-        )
+        fields = [
+            'email', 'password', 'confirm_password', 'username',
+            'name', 'surname', 'image', 'about_me', 'linkedin',
+            'is_notification_email', 'image_url', 'slug'
+        ]
+        if not settings.DEBUG and 'test' not in sys.argv:
+            fields.append('captcha')
+
         read_only_fields = ('id', 'slug')
-        extra_kwargs = {'password': {'write_only': True, 'min_length': 5}}
+        extra_kwargs = {
+            'password': {
+                'write_only': True, 'min_length': 5,
+                'style': {'input_type': 'password'}}}
 
     def validate(self, data):
         password = data.get('password')

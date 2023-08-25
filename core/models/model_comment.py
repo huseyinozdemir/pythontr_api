@@ -11,7 +11,7 @@ class Comment(models.Model):
     object_id = models.PositiveIntegerField()
     content_object = GenericForeignKey('content_type', 'object_id')
 
-    create_at = models.DateTimeField(auto_now_add=True)
+    created_at = models.DateTimeField(auto_now_add=True)
     content = models.TextField(blank=True)
     email = models.CharField(max_length=100)
     name = models.CharField(max_length=50)

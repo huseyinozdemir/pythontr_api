@@ -60,7 +60,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     is_ban = models.BooleanField(default=False)
     is_delete = models.BooleanField(default=False)
     slug = models.SlugField(unique=True, max_length=150, editable=False)
-    create_at = models.DateTimeField(auto_now_add=True, editable=False)
+    created_at = models.DateTimeField(auto_now_add=True, editable=False)
     updated_at = models.DateTimeField(auto_now_add=True)
 
     objects = UserManager()

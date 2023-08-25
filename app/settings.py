@@ -29,7 +29,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = 's#kkb7z3ste9!7fo#__7jq*ey5+ro_$ho83b=4@ziw&!9=_h86'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = os.environ.get('DEBUG')
 
 ALLOWED_HOSTS = ['127.0.0.1', 'localhost', 'app']
 
@@ -59,6 +59,9 @@ INSTALLED_APPS = [
     'user',
     'recipe',
 ]
+
+RECAPTCHA_SITE_KEY = '6LfoFNUnAAAAAJ_ci067o0fXyqUtlF4GrrBHjY-w'
+RECAPTCHA_SECRET_KEY = '6LfoFNUnAAAAABSxjTT32vbLQiy8vIyp-S--9IDg'
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -144,6 +147,7 @@ USE_TZ = True
 
 
 STATIC_URL = '/static/'
+#STATIC_ROOT = 'static/'
 
 STATICFILES_DIRS = (
     os.path.join(BASE_DIR, "static"),
