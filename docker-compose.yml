@@ -24,8 +24,8 @@ services:
             - DB_PASS=supersecretpassword
             - DB_ENGINE=django.db.backends.postgresql
             - DEBUG=True
-            - RECAPTCHA_SITE_KEY=your_site_key
-            - RECAPTCHA_SECRET_KEY=your_api_secret_key
+            - RECAPTCHA_SITE_KEY=6Le_kNUnAAAAAEpKUs1zE6ysGnqAiRpfhiHqKrho
+            - RECAPTCHA_SECRET_KEY=6Le_kNUnAAAAAMLM1YSmn5Ga9Nh22BhNqc8IhRXS
         depends_on:
             - db
         networks:
