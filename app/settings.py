@@ -31,7 +31,7 @@ SECRET_KEY = 's#kkb7z3ste9!7fo#__7jq*ey5+ro_$ho83b=4@ziw&!9=_h86'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.environ.get('DEBUG')
 
-ALLOWED_HOSTS = ['127.0.0.1', 'localhost', 'app']
+ALLOWED_HOSTS = [os.environ.get('ALLOW_HOST'), 'localhost', 'app']
 
 LANGUAGE_CODE = 'tr'
 
