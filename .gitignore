@@ -135,3 +135,6 @@ data/
 static/admin/
 static/avatar/
 static/rest_framework/
+
+# Docker
+docker-compose.yml

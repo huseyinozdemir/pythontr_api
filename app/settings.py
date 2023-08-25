@@ -60,8 +60,8 @@ INSTALLED_APPS = [
     'recipe',
 ]
 
-RECAPTCHA_SITE_KEY = '6LfoFNUnAAAAAJ_ci067o0fXyqUtlF4GrrBHjY-w'
-RECAPTCHA_SECRET_KEY = '6LfoFNUnAAAAABSxjTT32vbLQiy8vIyp-S--9IDg'
+RECAPTCHA_SITE_KEY = os.environ.get('RECAPTCHA_SITE_KEY')
+RECAPTCHA_SECRET_KEY = os.environ.get('RECAPTCHA_SECRET_KEY')
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
