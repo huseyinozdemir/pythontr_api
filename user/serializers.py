@@ -19,7 +19,7 @@ class UserSerializer(serializers.ModelSerializer):
         captcha = serializers.CharField(write_only=True, required=True)
 
         def validate_captcha(self, value):
-            recaptcha_url = "https://www.google.com/recaptcha/api/siteverify"
+            recaptcha_url = settings.RECAPTCHA_URL
             payload = {
                 "secret": settings.RECAPTCHA_SECRET_KEY,
                 "response": value
@@ -81,6 +81,24 @@ class AuthTokenSerializer(serializers.Serializer):
         style={'input_type': 'password'},
         trim_whitespace=False
     )
+
+    if not settings.DEBUG and 'test' not in sys.argv:
+        captcha = serializers.CharField(write_only=True, required=True)
+
+        def validate_captcha(self, value):
+            recaptcha_url = settings.RECAPTCHA_URL
+            payload = {
+                "secret": settings.RECAPTCHA_SECRET_KEY,
+                "response": value
+            }
+            response = requests.post(recaptcha_url, data=payload)
+            result = response.json()
+
+            if not result.get("success"):
+                raise serializers.ValidationError(
+                    _("reCAPTCHA verification failed"))
+
+            return value
 
     def validate(self, attrs):
         """Validate and authenticate the user"""

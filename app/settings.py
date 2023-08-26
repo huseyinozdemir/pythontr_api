@@ -60,6 +60,7 @@ INSTALLED_APPS = [
     'recipe',
 ]
 
+RECAPTCHA_URL = 'https://www.google.com/recaptcha/api/siteverify'
 RECAPTCHA_SITE_KEY = os.environ.get('RECAPTCHA_SITE_KEY')
 RECAPTCHA_SECRET_KEY = os.environ.get('RECAPTCHA_SECRET_KEY')
 
