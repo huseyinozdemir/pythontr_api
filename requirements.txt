@@ -5,4 +5,5 @@ Pillow>=9.3.0,<9.4.0
 python-dotenv>=1.0.0,<1.1.0
 django_simple_captcha>=0.5.18,<0.6.0
 requests>=2.31.0<2.32.0
+gunicorn>=21.2.0<21.2.3
 #mysqlclient>=2.2.0,<2.3.0
