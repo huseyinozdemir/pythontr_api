@@ -12,7 +12,7 @@ from .filter_param import RulesFilter, Search, Me
 
 
 class ArticleViewSet(BaseViewSet, mixins.CreateModelMixin):
-    queryset = Article.objects.all()
+    queryset = Article.objects.select_related('user').all()
     serializer_class = serializers.ArticleSerializer
     permission_classes_by_action = {
         'list': [IsAuthenticatedOrReadOnly],
