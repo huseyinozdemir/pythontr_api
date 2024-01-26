@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/3.0/ref/settings/
 """
 
 import os
+import sys
 
 from django.utils.translation import gettext_lazy as _
 from dotenv import load_dotenv
@@ -59,6 +60,12 @@ INSTALLED_APPS = [
     'user',
     'recipe',
 ]
+
+if 'test' not in sys.argv:
+    REST_FRAMEWORK = {
+        'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
+        'PAGE_SIZE': 20,
+    }
 
 RECAPTCHA_URL = 'https://www.google.com/recaptcha/api/siteverify'
 RECAPTCHA_SITE_KEY = os.environ.get('RECAPTCHA_SITE_KEY')
