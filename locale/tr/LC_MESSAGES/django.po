@@ -19,36 +19,39 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
 #: app/settings.py:39
-msgid "Turkish"
+msgid "turkish"
 msgstr "Türkçe"
 
 #: app/settings.py:40
-msgid "English"
+msgid "english"
 msgstr "İngilizce"
 
 #: core/admin.py:17
-msgid "Personel Info"
+msgid "personel_info"
 msgstr "Personel Bilgisi"
 
 #: core/admin.py:20
-msgid "Permissions"
+msgid "permissions"
 msgstr "Yetkiler"
 
 #: core/admin.py:25
-msgid "Important dates"
+msgid "important_dates"
 msgstr "Önemli Tarihler"
 
 #: user/serializers.py:53
-msgid "Unable to authenticate with provided credentials"
+msgid "unable_to_authenticate_with_provided_credentials"
 msgstr "Sağlanan kimlik bilgileriyle kimlik doğrulaması yapılamıyor"
 
 #: recipe/views/view_article:85
-msgid "Article created successfully."
+msgid "article_created_successfully"
 msgstr "Makale başarıyla oluşturuldu."
 
 #: user/serializers.py:31
-msgid "Passwords do not match"
+msgid "passwords_do_not_match"
 msgstr "Şifreler eşleşmiyor"
 
-msgid "reCAPTCHA verification failed"
+msgid "recaptcha_verification_failed"
 msgstr "reCAPTCHA doğrulaması başarısız oldu."
+
+msgid "not_found"
+msgstr "Kayıt bulunamadı"

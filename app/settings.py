@@ -37,8 +37,8 @@ ALLOWED_HOSTS = [os.environ.get('ALLOW_HOST'), 'localhost', 'app']
 LANGUAGE_CODE = 'tr'
 
 LANGUAGES = [
-    ('tr', _('Turkish')),
-    ('en', _('English')),
+    ('tr', _('turkish')),
+    ('en', _('english')),
 ]
 
 LOCALE_PATHS = [

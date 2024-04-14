@@ -29,7 +29,7 @@ class UserSerializer(serializers.ModelSerializer):
 
             if not result.get("success"):
                 raise serializers.ValidationError(
-                    _("reCAPTCHA verification failed"))
+                    _("recaptcha_verification_failed"))
 
             return value
 
@@ -54,7 +54,7 @@ class UserSerializer(serializers.ModelSerializer):
         confirm_password = data.get('confirm_password')
 
         if password != confirm_password:
-            raise serializers.ValidationError(_("Passwords do not match"))
+            raise serializers.ValidationError(_("passwords_do_not_match"))
 
         return data
 
@@ -96,7 +96,7 @@ class AuthTokenSerializer(serializers.Serializer):
 
             if not result.get("success"):
                 raise serializers.ValidationError(
-                    _("reCAPTCHA verification failed"))
+                    _("recaptcha_verification_failed"))
 
             return value
 
@@ -111,7 +111,7 @@ class AuthTokenSerializer(serializers.Serializer):
             password=password
         )
         if not user:
-            msg = _('Unable to authenticate with provided credentials')
+            msg = _('unable_to_authenticate_with_provided_credentials')
             raise serializers.ValidationError(msg, code='authentication')
 
         attrs['user'] = user

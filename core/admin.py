@@ -14,15 +14,15 @@ class UserAdmin(BaseUserAdmin):
     list_filter = ('email',)
     fieldsets = (
         (None, {'fields': ('email', 'password',)}),
-        (_('Personel Info'), {'fields': ('username', 'name', 'surname',
+        (_('personel_info'), {'fields': ('username', 'name', 'surname',
                               'about_me', 'image',)}),
         (
-            _('Permissions'),
+            _('permissions'),
             {'fields': ('is_notification_email', 'is_staff', 'is_superuser',
                         'is_active', 'is_ban', 'is_delete',)}
         ),
         (
-            _('Important dates'),
+            _('important_dates'),
             {'fields': ('last_login', 'created_at',)}
         ),
     )

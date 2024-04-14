@@ -43,7 +43,7 @@ class CommentSerializer(serializers.ModelSerializer):
 
             if not result.get("success"):
                 raise serializers.ValidationError(
-                    _("reCAPTCHA verification failed"))
+                    _("recaptcha_verification_failed"))
 
             return value
 

@@ -2,6 +2,7 @@ from rest_framework import mixins
 from rest_framework.permissions import (IsAuthenticated,
                                         IsAuthenticatedOrReadOnly)
 from rest_framework.exceptions import NotFound
+from django.utils.translation import gettext as _
 
 from core.models import Article
 
@@ -61,6 +62,6 @@ class ArticleViewSet(BaseViewSet, mixins.CreateModelMixin):
         ).all().order_by('-id').distinct()
 
         if not queryset.exists():
-            raise NotFound("Kayıt bulunamadı.")
+            raise NotFound(_('not_found'))
 
         return queryset
