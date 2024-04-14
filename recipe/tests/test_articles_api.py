@@ -30,8 +30,7 @@ class PublicArticleApiTest(TestCase):
 
     def test_list_not_login_requried(self):
         res = self.client.get(ARTICLES_URL)
-
-        self.assertEqual(res.status_code, status.HTTP_200_OK)
+        self.assertEqual(res.status_code, status.HTTP_404_NOT_FOUND)
 
     def test_404_article_login_not_required(self):
         url = detail_url()
@@ -188,7 +187,6 @@ class PrivateArticleApiTest(TestCase):
             user=self.user
         )
         article.categories.add(category)
-
         res = self.client.get(ARTICLES_URL_ME)
         self.assertEqual(res.status_code, status.HTTP_200_OK)
         self.assertEqual(len(res.data), 2)

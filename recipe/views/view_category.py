@@ -21,8 +21,7 @@ class CategoryViewSet(BaseViewSet, mixins.CreateModelMixin):
         category_id_or_slug = self.kwargs.get('pk')
         if category_id_or_slug.isdigit():
             return Category.objects.get(pk=category_id_or_slug)
-        else:
-            return Category.objects.get(slug=category_id_or_slug)
+        return Category.objects.get(slug=category_id_or_slug)
 
     def get_queryset(self):
         search = self.request.query_params.get('search')

@@ -59,6 +59,6 @@ class MessageViewSet(BaseViewSet, mixins.CreateModelMixin):
         ).filter(
             Q(user=self.request.user) |
             Q(sender=self.request.user),
-        ).all().order_by('-id').distinct("id").all()
+        ).all().order_by('-id').distinct().all()
 
         return queryset

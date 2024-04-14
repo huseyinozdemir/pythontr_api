@@ -1,6 +1,7 @@
 from rest_framework import mixins
 from rest_framework.permissions import (IsAuthenticated,
                                         IsAuthenticatedOrReadOnly)
+from rest_framework.exceptions import NotFound
 
 from core.models import Article
 
@@ -8,7 +9,7 @@ from recipe import serializers
 from recipe.permissions import IsAuthenticatedAndOwner
 
 from .baseview import BaseViewSet
-from .filter_param import RulesFilter, Search, Me
+from .filter_param import RulesFilter, Search, Me, Category
 
 
 class ArticleViewSet(BaseViewSet, mixins.CreateModelMixin):
@@ -24,12 +25,16 @@ class ArticleViewSet(BaseViewSet, mixins.CreateModelMixin):
     def get_queryset(self):
         """ self.action == 'list' """
         search = self.request.query_params.get('search', None)
+        categories = self.request.query_params.getlist('category', [])
         me = self.request.query_params.get('me', None)
         queryset = None
 
         SearchKwargs = {
-            '{0}__{1}'.format('subject', 'icontains'): search,
+            '{0}__{1}'.format('title', 'icontains'): search,
         }
+        if categories:
+            SearchKwargs['{0}__{1}'.format(
+                'categories__id', 'in')] = categories
 
         MeKwargs = {
             '{0}'.format('user'): self.request.user,
@@ -37,6 +42,7 @@ class ArticleViewSet(BaseViewSet, mixins.CreateModelMixin):
 
         rules = [
             Search(search, **SearchKwargs),
+            Category(categories, **SearchKwargs),
             Me(me, **MeKwargs)
         ]
 
@@ -53,5 +59,8 @@ class ArticleViewSet(BaseViewSet, mixins.CreateModelMixin):
         queryset = self.queryset.filter(
             **kwargs
         ).all().order_by('-id').distinct()
+
+        if not queryset.exists():
+            raise NotFound("Kayıt bulunamadı.")
 
         return queryset

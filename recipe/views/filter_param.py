@@ -2,7 +2,7 @@ class FilterParam:
 
     def __init__(self, check, **kwargs):
         self.check = True if check is not None else False
-        self.params = kwargs
+        self.params = {k: v for k, v in kwargs.items() if v is not None}
 
     def is_check(self):
         return self.check
@@ -12,6 +12,10 @@ class FilterParam:
 
 
 class Search(FilterParam):
+    pass
+
+
+class Category(FilterParam):
     pass
 
 
