@@ -18,8 +18,13 @@ class CategoryViewSet(BaseViewSet, mixins.CreateModelMixin):
                                     'retrieve': [IsAuthenticatedOrReadOnly]}
 
     def get_object(self):
-        category_id = self.kwargs.get('pk', None)
-        return Category.objects.get(pk=category_id)
+
+        slug = self.kwargs.get('slug')
+        if slug:
+            return Category.objects.get(slug=slug)
+        else:
+            category_id = self.kwargs.get('pk', None)
+            return Category.objects.get(pk=category_id)
 
     def get_queryset(self):
         search = self.request.query_params.get('search')
