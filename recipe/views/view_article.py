@@ -29,6 +29,7 @@ class ArticleViewSet(BaseViewSet, mixins.CreateModelMixin):
         categories = self.request.query_params.getlist('category', [])
         me = self.request.query_params.get('me', None)
         queryset = None
+        self.serializer_class = serializers.ArticleListSerializer
 
         SearchKwargs = {
             '{0}__{1}'.format('title', 'icontains'): search,
