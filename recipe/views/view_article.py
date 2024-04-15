@@ -23,6 +23,12 @@ class ArticleViewSet(BaseViewSet, mixins.CreateModelMixin):
         'update': [IsAuthenticatedAndOwner],
     }
 
+    def get_object(self):
+        id_or_slug = self.kwargs.get('pk')
+        if id_or_slug.isdigit():
+            return Article.objects.get(pk=id_or_slug)
+        return Article.objects.get(slug=id_or_slug)
+
     def get_queryset(self):
         """ self.action == 'list' """
         search = self.request.query_params.get('search', None)
