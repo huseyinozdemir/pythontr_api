@@ -164,6 +164,7 @@ STATICFILES_DIRS = (
 
 AVATAR_ROOT = 'static/avatar/'
 ARTICLE_ROOT = 'static/article/'
+IMAGE_ROOT = 'static/img/'
 
 APLICATION_NAME = 'app'
 AUTH_USER_MODEL = 'core.User'
