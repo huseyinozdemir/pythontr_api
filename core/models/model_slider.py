@@ -9,7 +9,7 @@ def slider_image_file_path(instance, filename):
         "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-._"
     sanitized_filename = ''.join(c for c in f_name if c in allowed_chars)
     slug = slugify(sanitized_filename)
-    file_path = f'{settings.IMAGE_ROOT}{instance.pk}/{slug}.{ext}'
+    file_path = f'{settings.IMAGE_ROOT}/{slug}.{ext}'
     return file_path
 
 

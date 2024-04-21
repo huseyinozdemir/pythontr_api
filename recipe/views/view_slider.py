@@ -23,6 +23,10 @@ class SliderViewSet(BaseViewSet, mixins.CreateModelMixin):
         'update': [IsAuthenticatedAndOwner],
     }
 
+    def get_object(self):
+        id = self.kwargs.get('pk')
+        return Slider.objects.get(pk=id)
+
     def get_queryset(self):
         """ self.action == 'list' """
         search = self.request.query_params.get('search', None)
