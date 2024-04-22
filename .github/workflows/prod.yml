@@ -1,0 +1,37 @@
+on:
+    push:
+      branches:
+        - PYT-22
+      tags:
+        - v1.*
+
+name: Deploy to backend
+
+env:
+    HOST: ${{ secrets.HOST }}
+    USERNAME: ${{ secrets.USERNAME }}
+    KEY: ${{ secrets.KEY }}
+    PORT: ${{ secrets.PORT }}
+    SOURCE: '.'
+    TARGET:  ${{ secrets.API_PYTHONTR_PATH }}
+    REPO_NAME: 'pythontr_api'
+ 
+jobs:
+    build:
+        runs-on: ubuntu-latest
+        name: Build and Deploy db.
+  
+        steps:
+            - uses: actions/checkout@v3
+            - name: Create key for local servers
+              run: |
+                mkdir -p .ssh
+                echo "${{ env.KEY }}" > .ssh/id_rsa
+                chmod 700 .ssh/id_rsa
+            - name: RSYNC files via ssh key on ${{ env.HOST }}
+              run: |
+                rsync -vrzhe "ssh -p ${{ env.PORT }} -o StrictHostKeyChecking=no -i .ssh/id_rsa" --exclude .git ${{ env.SOURCE }} ${{ env.USERNAME }}@${{ env.HOST }}:${{ env.TARGET }}
+            - name: Service is restarting on ${{ env.HOST }} for Swarm
+              run: |
+                ssh -p ${{ env.PORT }} -o StrictHostKeyChecking=no -i .ssh/id_rsa ${{ env.USERNAME }}@${{ env.HOST }} "cd ${{ env.TARGET }}; \
+                sudo systemctl restart gunicorn.service"
