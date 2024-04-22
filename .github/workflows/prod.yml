@@ -1,9 +1,7 @@
 on:
     push:
-      branches:
-        - PYT-22
-      tags:
-        - v1.*
+        tags:
+            - v1.*
 
 name: Deploy to backend
 
@@ -31,7 +29,7 @@ jobs:
             - name: RSYNC files via ssh key on ${{ env.HOST }}
               run: |
                 rsync -vrzhe "ssh -p ${{ env.PORT }} -o StrictHostKeyChecking=no -i .ssh/id_rsa" --exclude .git ${{ env.SOURCE }} ${{ env.USERNAME }}@${{ env.HOST }}:${{ env.TARGET }}
-            - name: Service is restarting on ${{ env.HOST }} for Swarm
+            - name: Service is restarting on ${{ env.HOST }}
               run: |
                 ssh -p ${{ env.PORT }} -o StrictHostKeyChecking=no -i .ssh/id_rsa ${{ env.USERNAME }}@${{ env.HOST }} "cd ${{ env.TARGET }}; \
                 sudo systemctl restart gunicorn.service"
