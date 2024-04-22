@@ -1,0 +1,12 @@
+[Unit]
+Description=Pythontr for Django project
+After=network.target
+
+[Service]
+User=husonet
+Group=husonet
+WorkingDirectory=/home/www/api.pythontr.com
+ExecStart=/home/www/api/.venv/bin/gunicorn --workers 4 --bind unix:/home/www/api/run/app.sock app.wsgi:application
+
+[Install]
+WantedBy=multi-user.target
