@@ -8,4 +8,4 @@ cd "${0%/*}/.."
 
 echo "Running unit test and flake 8 for Django Framework on Docker Container"
 echo "............................."
-docker-compose run -T --rm app sh -c "python manage.py test && flake8"
+docker compose run -T --rm app sh -c "python manage.py test && flake8"
