@@ -32,7 +32,7 @@ SECRET_KEY = 's#kkb7z3ste9!7fo#__7jq*ey5+ro_$ho83b=4@ziw&!9=_h86'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.environ.get('DEBUG', '').lower() == 'true'
 
-ALLOWED_HOSTS = [os.environ.get('ALLOW_HOST'), 'localhost', 'app']
+ALLOWED_HOSTS = os.environ.get('ALLOW_HOST').split(',')
 
 LANGUAGE_CODE = 'tr'
 
@@ -56,17 +56,22 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'rest_framework',
     'rest_framework.authtoken',
+    'app',
     'core',
     'user',
     'recipe',
 ]
 
+REST_FRAMEWORK = {    
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'app.authentication.CookieTokenAuthentication',
+        'rest_framework.authentication.TokenAuthentication',  # Geriye dönük uyumluluk için
+    ]
+}
+
 if 'test' not in sys.argv:
-    REST_FRAMEWORK = {
-        # 'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
-        'DEFAULT_PAGINATION_CLASS': 'core.pagination.CustomPagination',
-        'PAGE_SIZE': 27,
-    }
+    REST_FRAMEWORK['DEFAULT_PAGINATION_CLASS'] = 'core.pagination.CustomPagination'
+    REST_FRAMEWORK['PAGE_SIZE'] =  27
 
 RECAPTCHA_URL = 'https://www.google.com/recaptcha/api/siteverify'
 RECAPTCHA_SITE_KEY = os.environ.get('RECAPTCHA_SITE_KEY')
@@ -140,7 +145,7 @@ AUTH_PASSWORD_VALIDATORS = [
 # Internationalization
 # https://docs.djangoproject.com/en/3.0/topics/i18n/
 
-LANGUAGE_CODE = 'en-us'
+# LANGUAGE_CODE = 'en-us'
 
 TIME_ZONE = 'UTC'
 
@@ -170,3 +175,5 @@ APLICATION_NAME = 'app'
 AUTH_USER_MODEL = 'core.User'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+CSRF_TRUSTED_ORIGINS = ["https://*.pythontr.com"]
