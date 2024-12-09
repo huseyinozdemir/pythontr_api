@@ -1,7 +1,7 @@
 on:
   push:
     branches:
-      - PYT-24
+      - PYT-25
     tags:
       - v1.*
 
