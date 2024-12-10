@@ -83,7 +83,7 @@ class Migration(migrations.Migration):
                 ['Oracle', 'Oracle Veritabanı', 'Oracle Veritabanı Hakkında', 'Oracle', 'oracle', datetime.now(), datetime.now(), '2']),
                 ("""INSERT INTO core_category (name, title, title_h1, short_name, slug, created_at, updated_at, parent_category_id) 
                 VALUES (%s, %s, %s, %s, %s, %s, %s, %s);""",
-                ['Linux', 'Linux İşletim Sistemleri', 'Debian \ Ubuntu \ Pardus vb', 'Linux', 'linux', datetime.now(), datetime.now(), '3']),
+                ['Linux', 'Linux İşletim Sistemleri', 'Debian \\ Ubuntu \\ Pardus vb', 'Linux', 'linux', datetime.now(), datetime.now(), '3']),
                  ("""INSERT INTO core_category (name, title, title_h1, short_name, slug, created_at, updated_at, parent_category_id) 
                 VALUES (%s, %s, %s, %s, %s, %s, %s, %s);""",
                 ['OS', 'MacOs ve Ios', 'MacOs ve Ios İşletim Sistemleri', 'macos', 'macos-ios', datetime.now(), datetime.now(), '3']),

@@ -46,7 +46,6 @@ LOCALE_PATHS = [
 ]
 
 # Application definition
-
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
@@ -66,8 +65,10 @@ REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': [
         'app.authentication.CookieTokenAuthentication',
         'rest_framework.authentication.TokenAuthentication',  # Geriye dönük uyumluluk için
-    ]
+    ],
 }
+
+TOKEN_EXPIRED_AFTER_SECONDS = 86400
 
 if 'test' not in sys.argv:
     REST_FRAMEWORK['DEFAULT_PAGINATION_CLASS'] = 'core.pagination.CustomPagination'

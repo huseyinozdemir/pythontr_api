@@ -1,6 +1,7 @@
 from rest_framework import viewsets, mixins
 from rest_framework.authentication import TokenAuthentication
 from rest_framework.permissions import IsAuthenticated, AllowAny, IsAdminUser
+from app.authentication import CookieTokenAuthentication
 
 
 class BaseViewSet(viewsets.GenericViewSet,
@@ -10,7 +11,7 @@ class BaseViewSet(viewsets.GenericViewSet,
                   # mixins.DestroyModelMixin
                   ):
 
-    authentication_classes = (TokenAuthentication,)
+    authentication_classes = (TokenAuthentication, CookieTokenAuthentication)
     permission_classes = (IsAuthenticated,)
 
     permission_classes_by_action = {'update': [IsAdminUser],
