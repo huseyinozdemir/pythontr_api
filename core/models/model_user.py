@@ -54,6 +54,7 @@ class User(AbstractBaseUser, PermissionsMixin):
                               blank=True)
     about_me = models.TextField(blank=True)
     linkedin = models.CharField(max_length=255, blank=True)
+    github = models.CharField(max_length=255, blank=True)
     is_notification_email = models.BooleanField(default=True)
     is_active = models.BooleanField(default=False)
     is_staff = models.BooleanField(default=False)

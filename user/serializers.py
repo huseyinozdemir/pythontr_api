@@ -38,7 +38,7 @@ class UserSerializer(serializers.ModelSerializer):
         fields = [
             'email', 'password', 'confirm_password', 'username',
             'name', 'surname', 'image', 'about_me', 'linkedin',
-            'is_notification_email', 'image_url', 'slug'
+            'github', 'is_notification_email', 'image_url', 'slug'
         ]
         if not settings.DEBUG and 'test' not in sys.argv:
             fields.append('captcha')
