@@ -11,7 +11,7 @@ class ArticleListSerializer(serializers.ModelSerializer):
         model = Article
         fields = ('id', 'title', 'title_h1', 'description',
                   'image', 'read_count', 'image_url', 'slug',
-                  'user', 'username', 'created_at',
+                  'user', 'username', 'is_active', 'created_at',
                   'updated_at')
-        read_only_fields = ('id', 'slug', 'read_count',
+        read_only_fields = ('id', 'slug', 'read_count', 'is_active',
                             'created_at', 'updated_at')

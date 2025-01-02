@@ -1,13 +1,18 @@
 from rest_framework import mixins
 from rest_framework.permissions import (IsAuthenticated,
                                         IsAuthenticatedOrReadOnly)
+from rest_framework.parsers import MultiPartParser, FormParser, JSONParser
+from rest_framework.response import Response
+from rest_framework import status
+
 from rest_framework.exceptions import NotFound
 from django.utils.translation import gettext as _
 
 from core.models import Article
 
 from recipe import serializers
-from recipe.permissions import IsAuthenticatedAndOwner
+from recipe.permissions import IsAuthenticatedAndOwner, \
+    IsAuthenticatedAndOwnerOrAdmin
 
 from .baseview import BaseViewSet
 from .filter_param import RulesFilter, Search, Me, Category
@@ -21,7 +26,10 @@ class ArticleViewSet(BaseViewSet, mixins.CreateModelMixin):
         'retrieve': [IsAuthenticatedOrReadOnly],
         'create': [IsAuthenticated],
         'update': [IsAuthenticatedAndOwner],
+        'destroy': [IsAuthenticatedAndOwnerOrAdmin],
     }
+
+    parser_classes = (MultiPartParser, FormParser, JSONParser)
 
     def get_object(self):
         id_or_slug = self.kwargs.get('pk')
@@ -33,6 +41,7 @@ class ArticleViewSet(BaseViewSet, mixins.CreateModelMixin):
         """ self.action == 'list' """
         search = self.request.query_params.get('search', None)
         categories = self.request.query_params.getlist('category', [])
+        is_active = self.request.query_params.get('is_active', None)
         me = self.request.query_params.get('me', None)
         queryset = None
         self.serializer_class = serializers.ArticleListSerializer
@@ -46,7 +55,12 @@ class ArticleViewSet(BaseViewSet, mixins.CreateModelMixin):
 
         MeKwargs = {
             '{0}'.format('user'): self.request.user,
+            # **({'is_active': is_active == "true"} if is_active else {})
         }
+
+        if is_active is not None:
+            if is_active in ["true", "false"]:
+                MeKwargs['is_active'] = is_active.lower() == "true"
 
         rules = [
             Search(search, **SearchKwargs),
@@ -54,10 +68,10 @@ class ArticleViewSet(BaseViewSet, mixins.CreateModelMixin):
             Me(me, **MeKwargs)
         ]
 
-        kwargs = {
-            '{0}_{1}'.format('is', 'active'): True,
-            '{0}_{1}'.format('is', 'delete'): False,
-        }
+        kwargs = {}
+
+        if not me:
+            kwargs['{0}_{1}'.format('is', 'active')] = True
 
         rf = RulesFilter(rules)
         for item in rf.get_res():
@@ -72,3 +86,12 @@ class ArticleViewSet(BaseViewSet, mixins.CreateModelMixin):
             raise NotFound(_('not_found'))
 
         return queryset
+
+    def destroy(self, request, *args, **kwargs):
+        instance = self.get_object()
+        # Soft delete
+        instance.is_delete = True
+        instance.save()
+        # Or hard delete
+        # instance.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)

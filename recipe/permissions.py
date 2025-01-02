@@ -20,6 +20,16 @@ class IsAuthenticatedAndOwner(BasePermission):
             return False
 
 
+class IsAuthenticatedAndOwnerOrAdmin(BasePermission):
+    def has_object_permission(self, request, view, obj):
+        # For admin or owner permission
+        return bool(
+            request.user and
+            request.user.is_authenticated and
+            (request.user.is_staff or obj.user == request.user)
+        )
+
+
 class IsAuthenticatedAndOwnerOld(BasePermission):
 
     def has_permission(self, request, view):

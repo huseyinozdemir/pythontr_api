@@ -1,3 +1,6 @@
+import os
+import shutil
+
 from django.db import models
 from django.contrib.contenttypes.fields import GenericRelation
 
@@ -14,9 +17,11 @@ def article_image_file_path(instance, filename):
     f_name, ext = filename.split('.')
     allowed_chars = \
         "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-._"
-    sanitized_filename = ''.join(c for c in f_name if c in allowed_chars)
+    sanitized_filename = ''.join(
+        c for c in f_name if c in allowed_chars).strip()
     slug = slugify(sanitized_filename)
-    file_path = f'{settings.AVATAR_ROOT}{instance.pk}/{slug}.{ext}'
+    folder = instance.pk if instance.pk else 'temp'
+    file_path = f'{settings.ARTICLE_ROOT}{folder}/{slug}.{ext}'
     return file_path
 
 
@@ -67,7 +72,20 @@ class Article(models.Model):
         self.updated_at = timezone.now()
         self.slug = self.get_slug()
 
-        return super(Article, self).save(*args, **kwargs)
+        super(Article, self).save(*args, **kwargs)
+        if self.image and 'temp' in self.image.path:
+            filename = os.path.basename(self.image.name).strip()
+            new_path = f'{settings.ARTICLE_ROOT}{self.pk}/{filename}'
+            os.makedirs(os.path.dirname(new_path), exist_ok=True)
+
+            old_path = self.image.path
+            self.image.name = new_path
+            super(Article, self).save(update_fields=['image'])
+
+            if os.path.exists(old_path):
+                shutil.move(old_path, new_path)
+
+        return self
 
     def __str__(self):
         return self.title

@@ -144,7 +144,7 @@ class PrivateArticleApiTest(TestCase):
         url = detail_url(article.id)
 
         res = self.client.delete(url)
-        self.assertEqual(res.status_code, status.HTTP_405_METHOD_NOT_ALLOWED)
+        self.assertEqual(res.status_code, status.HTTP_204_NO_CONTENT)
 
     def test_filter_me_get(self):
         self.is_staff = True
