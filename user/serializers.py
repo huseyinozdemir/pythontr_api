@@ -10,6 +10,7 @@ from rest_framework import serializers
 
 class UserSerializer(serializers.ModelSerializer):
     image_url = serializers.ReadOnlyField()
+    is_staff = serializers.BooleanField()
     confirm_password = serializers.CharField(
         write_only=True,
         required=False,
@@ -44,7 +45,7 @@ class UserSerializer(serializers.ModelSerializer):
             'email', 'password', 'confirm_password', 'username',
             'name', 'surname', 'image', 'about_me', 'linkedin',
             'github', 'is_notification_email', 'image_url', 'slug',
-            'current_password'
+            'is_staff', 'current_password'
         ]
         if not settings.DEBUG and 'test' not in sys.argv:
             fields.append('captcha')
