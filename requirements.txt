@@ -8,4 +8,5 @@ requests>=2.32.0,<2.33.0
 gunicorn>=22.0.0,<22.1.0
 django-cors-headers>=4.3.1,<4.4
 django-filter>=24.3,<24.4
+user-agents>=2.2.0,<2.3.0
 #mysqlclient>=2.2.0,<2.3.0

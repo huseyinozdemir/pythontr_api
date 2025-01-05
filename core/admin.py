@@ -58,8 +58,23 @@ class CommentAdmin(admin.ModelAdmin):
     ]
 
 
+class PageVisitAdmin(admin.ModelAdmin):
+    list_display = ('id', 'user', 'path', 'timestamp', 'ip_address',
+                    'user_agent', 'referrer', 'method', 'device_type',
+                    'language', 'ga_client_id', 'ga_session_id', 'gads_id',
+                    'gpi_uid')
+    list_filter = ('id', 'user', 'path', 'device_type', 'method', 'timestamp')
+    search_fields = ('id', 'user', 'path')
+    readonly_fields = ['timestamp']
+
+    def has_add_permission(self, request):
+        # Close add record
+        return False
+
+
 admin.site.register(models.User, UserAdmin)
 admin.site.register(models.Category)
 admin.site.register(models.Article, ArticleAdmin)
 admin.site.register(models.Comment, CommentAdmin)
 admin.site.register(models.Message)
+admin.site.register(models.PageVisit, PageVisitAdmin)

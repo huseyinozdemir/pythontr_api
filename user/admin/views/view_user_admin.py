@@ -4,12 +4,11 @@ from rest_framework.response import Response
 from django_filters.rest_framework import DjangoFilterBackend
 from django.contrib.auth import get_user_model
 
-from .serializers import AdminUserListSerializer, AdminUserDetailSerializer,\
-    AdminUserActionSerializer
+from user.admin import serializers
 
 
 class AdminUserViewSet(viewsets.ModelViewSet):
-    serializer_class = AdminUserListSerializer
+    serializer_class = serializers.AdminUserListSerializer
     permission_classes = [IsAdminUser]
     queryset = get_user_model().objects.all().order_by('-created_at')
     filter_backends = [filters.SearchFilter, DjangoFilterBackend]
@@ -19,9 +18,9 @@ class AdminUserViewSet(viewsets.ModelViewSet):
 
     def get_serializer_class(self):
         if self.action == 'retrieve':
-            return AdminUserDetailSerializer
+            return serializers.AdminUserDetailSerializer
         if self.action in ['update', 'partial_update']:
-            return AdminUserActionSerializer
+            return serializers.AdminUserActionSerializer
         return self.serializer_class
 
     def get_object(self):
