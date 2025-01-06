@@ -64,7 +64,7 @@ INSTALLED_APPS = [
 
 REST_FRAMEWORK = {    
     'DEFAULT_AUTHENTICATION_CLASSES': [
-        # 'app.authentication.CookieTokenAuthentication',
+        'app.authentication.CookieTokenAuthentication',
         'rest_framework.authentication.TokenAuthentication',  # Geriye dönük uyumluluk için
     ],
 }
