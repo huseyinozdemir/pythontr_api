@@ -4,6 +4,8 @@ import json
 from rest_framework import viewsets, permissions
 from rest_framework.decorators import action
 from core.models.model_page_visit import PageVisit
+from core.models.model_article import Article
+
 from django.http import JsonResponse
 from user_agents import parse
 
@@ -73,8 +75,17 @@ class PageVisitViewSet(viewsets.ModelViewSet):
             return JsonResponse(
                 {'status': 'ignored', 'reason': 'bot_detected'})
 
+        content_owner = None
+        if data['content_id']:
+            try:
+                content = Article.objects.get(id=data['content_id'])
+                content_owner = content.user
+            except Article.DoesNotExist:
+                pass
+
         page_visit = PageVisit(
-            user=request.user if request.user.is_authenticated else None,
+            # user=request.user if request.user.is_authenticated else None,
+            user=content_owner,
             path=data['path'],
             content_id=data['content_id'],
             ip_address=data['ip_address'],
