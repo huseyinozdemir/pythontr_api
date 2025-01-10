@@ -11,4 +11,8 @@ urlpatterns = [
     path('me/', views.ManageUserView.as_view(), name='me'),
     path('admin/', include('user.admin.urls', namespace='admin'),
          name='admin'),
+    path('activate/<uuid:code>/', views.ActivateUserView.as_view(),
+         name='activate'),
+    path('resend-activation/', views.ResendActivationView.as_view(),
+         name='resend-activation'),
 ]

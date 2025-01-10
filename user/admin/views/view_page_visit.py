@@ -4,14 +4,14 @@ import json
 from datetime import timedelta
 from user_agents import parse
 
-from rest_framework import viewsets, permissions
+from rest_framework.response import Response
+from rest_framework import viewsets, permissions, status
 from rest_framework.decorators import action
 
 from django.utils import timezone
 from django.db.models import F, Q
 from django.db.models import Count, Avg
 from django.db.models.functions import ExtractHour
-from django.http import JsonResponse
 
 from core.models.model_page_visit import PageVisit
 from core.models.model_article import Article
@@ -90,8 +90,10 @@ class PageVisitViewSet(viewsets.ModelViewSet):
         user_agent = parse(data['user_agent'])
 
         if self._is_bot(data['user_agent'], user_agent):
-            return JsonResponse(
-                {'status': 'ignored', 'reason': 'bot_detected'})
+            return Response(
+                {'status': 'ignored', 'reason': 'bot_detected'},
+                status=status.HTTP_200_OK
+            )
 
         content_owner = None
         if data['content_id']:
@@ -124,17 +126,27 @@ class PageVisitViewSet(viewsets.ModelViewSet):
         )
 
         page_visit.save()
-        return JsonResponse({'status': 'success'})
+        return Response(
+            {'status': 'success'},
+            status=status.HTTP_200_OK
+        )
 
     def _get_date_range(self, period):
         """Calculate date range for a given period"""
         now = timezone.now()
-        if period == 'week':
-            start_date = now - timedelta(days=7)
+        if period == 'day':
+            start_date = now.replace(hour=0, minute=0, second=0, microsecond=0)
+        elif period == 'week':
+            # Get the start of the current week (Monday)
+            start_date = (now - timedelta(days=now.weekday())).replace(
+                hour=0, minute=0, second=0, microsecond=0
+            )
         elif period == 'month':
-            start_date = now - timedelta(days=30)
+            start_date = (now - timedelta(days=30)).replace(
+                hour=0, minute=0, second=0, microsecond=0)
         elif period == 'year':
-            start_date = now - timedelta(days=365)
+            start_date = (now - timedelta(days=365)).replace(
+                hour=0, minute=0, second=0, microsecond=0)
         else:  # all time
             return None, None
         return start_date, now
@@ -190,7 +202,7 @@ class PageVisitViewSet(viewsets.ModelViewSet):
                 hour=ExtractHour('timestamp')
             ).values('hour').annotate(count=Count('id')).order_by('hour')),
         }
-        return JsonResponse(stats)
+        return Response(stats, status=status.HTTP_200_OK)
 
     @action(detail=False, methods=['GET'])
     def content_performance(self, request):
@@ -209,14 +221,14 @@ class PageVisitViewSet(viewsets.ModelViewSet):
             device_breakdown=Count('device_type'),
         ).order_by('-total_visits'))
 
-        return JsonResponse({
+        return Response({
             'period_info': {
                 'period': request.query_params.get('period', 'all'),
                 'start_date': request.query_params.get('start_date'),
                 'end_date': request.query_params.get('end_date'),
             },
             'performance': performance
-        })
+        }, status=status.HTTP_200_OK)
 
     @action(detail=False, methods=['GET'])
     def referrer_analysis(self, request):
@@ -233,11 +245,11 @@ class PageVisitViewSet(viewsets.ModelViewSet):
             unique_visitors=Count('ip_address', distinct=True)
         ).order_by('-visit_count'))
 
-        return JsonResponse({
+        return Response({
             'period_info': {
                 'period': request.query_params.get('period', 'all'),
                 'start_date': request.query_params.get('start_date'),
                 'end_date': request.query_params.get('end_date'),
             },
             'referrers': referrers
-        })
+        }, status=status.HTTP_200_OK)

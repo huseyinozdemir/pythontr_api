@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/3.0/ref/settings/
 
 import os
 import sys
+import ssl
 
 from django.utils.translation import gettext_lazy as _
 from dotenv import load_dotenv
@@ -123,6 +124,16 @@ DATABASES = {
         'PASSWORD': os.environ.get('DB_PASS'),
     }
 }
+
+SITE_URL = os.environ.get('SITE_URL', 'http://localhost:8000')
+
+EMAIL_BACKEND = os.environ.get('EMAIL_BACKEND', 'django.core.mail.backends.smtp.EmailBackend')
+EMAIL_HOST = os.environ.get('EMAIL_HOST')
+EMAIL_PORT = int(os.environ.get('EMAIL_PORT', 25))
+EMAIL_USE_TLS = os.environ.get('EMAIL_USE_TLS').lower() == 'true'
+EMAIL_HOST_USER = os.environ.get('EMAIL_HOST_USER')
+EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_HOST_PASSWORD')
+DEFAULT_FROM_EMAIL = os.environ.get('DEFAULT_FROM_EMAIL')
 
 
 # Password validation
