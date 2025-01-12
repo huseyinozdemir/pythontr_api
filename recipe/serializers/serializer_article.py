@@ -21,9 +21,24 @@ class ArticleSerializer(serializers.ModelSerializer):
                   'user', 'username', 'is_active', 'is_approval',
                   'approval_user', 'is_delete', 'comments', 'created_at',
                   'updated_at')
-        read_only_fields = ('id', 'is_delete', 'is_active', 'slug',
-                            'read_count', 'comments',
+        read_only_fields = ('id', 'slug', 'read_count', 'comments',
                             'created_at', 'updated_at')
+
+    def validate(self, data):
+        request = self.context.get('request')
+
+        if 'is_approval' in data:
+            if not request.user.is_staff and data['is_approval'] is True:
+                raise serializers.ValidationError({
+                    "is_approval": (
+                        "Onay durumunu sadece yöneticiler değiştirebilir."
+                    )
+                })
+            if data['is_approval'] is True:
+                data['approval_user'] = request.user
+            elif data['is_approval'] is False:
+                data['approval_user'] = None
+        return data
 
     def to_internal_value(self, data):
         if 'image' in data and data['image']:
@@ -33,7 +48,7 @@ class ArticleSerializer(serializers.ModelSerializer):
                 ext = format.split('/')[-1]
 
                 if 'title' in data:
-                    filename = slugify(data['title'])[:50]  # Uzunluğu sınırla
+                    filename = slugify(data['title'])[:50]
                 else:
                     filename = 'temp'
 

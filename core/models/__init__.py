@@ -5,3 +5,4 @@ from .model_article import * # noqa
 from .model_message import * # noqa
 from .model_slider import * # noqa
 from .model_page_visit import * # noqa
+from .model_activation import * # noqa
