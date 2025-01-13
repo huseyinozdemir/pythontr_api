@@ -7,9 +7,14 @@ from rest_framework import status
 from django.core.mail import send_mail
 from django.conf import settings
 from django.contrib.auth import get_user_model
+from django.contrib.auth.tokens import default_token_generator
+from django.utils.encoding import force_bytes, force_str
+from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
+from django.utils.translation import gettext_lazy as _
 
 from app.authentication import CookieTokenAuthentication
-from user.serializers import UserSerializer, AuthTokenSerializer
+from user.serializers import UserSerializer, AuthTokenSerializer, \
+    PasswordResetSerializer, PasswordResetConfirmSerializer
 from core.models import ActivationCode
 
 User = get_user_model()
@@ -22,13 +27,12 @@ class CreateUserView(generics.CreateAPIView):
         user = serializer.save()
         activation = ActivationCode.create_activation_code(user)
         send_mail(
-            'Pythontr.com sitemize hoşgeldiniz!',
-            'Hesabınızı aktif hale getirmek için lütfen aşağıdaki linki '
-            'tıklayınız.\n'
-            f'{settings.SITE_URL}/register/activate/{activation.code}\n\n'
-            f'Bu link {activation.expires_at.strftime("%d/%m/%Y %H:%M")}'
-            ' tarihine kadar geçerlidir.\n\n'
-            'Pythontr.com Team',
+            _('welcome_to_www'),
+            _('welcome_to_www_message').format(
+                link=f'{settings.SITE_URL}/register/activate/'
+                     f'{activation.code}',
+                expires_at=activation.expires_at.strftime("%d/%m/%Y %H:%M")
+            ),
             settings.DEFAULT_FROM_EMAIL,
             [user.email],
             fail_silently=False,
@@ -65,7 +69,7 @@ class ActivateUserView(generics.GenericAPIView):
 
             if activation.is_expired:
                 return Response(
-                    {'error': 'Aktivasyon kodunun süresi dolmuş.'},
+                    {'error': _('activation_code_is_expired')},
                     status=status.HTTP_400_BAD_REQUEST
                 )
 
@@ -76,11 +80,14 @@ class ActivateUserView(generics.GenericAPIView):
             activation.is_used = True
             activation.save()
 
-            return Response({'message': 'Hesabınız başarıyla aktive edildi.'})
+            return Response(
+                {'message': _('account_activated_successfully')},
+                status=status.HTTP_200_OK
+            )
 
         except ActivationCode.DoesNotExist:
             return Response(
-                {'error': 'Geçersiz aktivasyon kodu.'},
+                {'error': _('activation_code_is_invalid')},
                 status=status.HTTP_400_BAD_REQUEST
             )
 
@@ -93,26 +100,90 @@ class ResendActivationView(generics.GenericAPIView):
             activation = ActivationCode.create_activation_code(user)
 
             send_mail(
-                'Yeni Aktivasyon Kodu',
-                'Yeni aktivasyon kodunuz: '
-                f'{settings.SITE_URL}/register/activate/{activation.code}\n'
-                f'Bu link {activation.expires_at.strftime("%d/%m/%Y %H:%M")}'
-                ' tarihine kadar geçerlidir.\n\n'
-                'Pythontr.com Team',
+                _('new_activation_code_title'),
+                _('new_activation_code_message').format(
+                    code=activation.code,
+                    expires_at=activation.expires_at.strftime("%d/%m/%Y %H:%M")
+                ),
                 settings.DEFAULT_FROM_EMAIL,
                 [user.email],
                 fail_silently=False,
             )
 
             return Response(
-                {'message':
-                 'Yeni aktivasyon kodu email adresinize gönderildi.'},
+                {'message': _('new_activation_code_sent')},
                 status=status.HTTP_200_OK
             )
 
         except User.DoesNotExist:
             return Response(
-                {'error': 'Bu email adresi ile kayıtlı '
-                          'aktif edilmemiş hesap bulunamadı.'},
+                {'error': _('user_not_found_with_active_code')},
                 status=status.HTTP_400_BAD_REQUEST
             )
+
+
+class PasswordResetView(generics.GenericAPIView):
+    serializer_class = PasswordResetSerializer
+
+    def post(self, request):
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+
+        email = serializer.validated_data['email']
+        user = User.objects.get(email=email)
+
+        # Token and UID
+        token = default_token_generator.make_token(user)
+        uidb64 = urlsafe_base64_encode(force_bytes(user.pk))
+
+        # Send Email
+        reset_url = f"{settings.SITE_URL}/forgot-password/{uidb64}/{token}"
+        send_mail(
+            _('password_reset_title'),
+            _('password_reset_message').format(link=reset_url),
+            settings.DEFAULT_FROM_EMAIL,
+            [email],
+            fail_silently=False,
+        )
+
+        return Response({
+            'message': _('password_reset_success_message_link_sent')
+        })
+
+
+class PasswordResetConfirmView(generics.GenericAPIView):
+    serializer_class = PasswordResetConfirmSerializer
+
+    def get(self, request, uidb64, token):
+        try:
+            # Check Token and UID
+            uid = force_str(urlsafe_base64_decode(uidb64))
+            user = User.objects.get(pk=uid)
+
+            if not default_token_generator.check_token(user, token):
+                return Response(
+                    {'error': _('invalid_token_or_expired')},
+                    status=status.HTTP_400_BAD_REQUEST
+                )
+
+            return Response({'valid': True})
+
+        except (TypeError, ValueError, User.DoesNotExist):
+            return Response(
+                {'error': _('invalid_link')},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+
+    def post(self, request):
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+
+        user = serializer.validated_data['user']
+        password = serializer.validated_data['password']
+
+        user.set_password(password)
+        user.save()
+
+        return Response({
+            'message': _('password_reset_success_message')
+        })

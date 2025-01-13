@@ -3,7 +3,7 @@ from rest_framework.permissions import IsAdminUser
 from rest_framework.response import Response
 from django_filters.rest_framework import DjangoFilterBackend
 from django.contrib.auth import get_user_model
-
+from django.utils.translation import gettext as _
 from user.admin import serializers
 
 
@@ -32,7 +32,7 @@ class AdminUserViewSet(viewsets.ModelViewSet):
         user = self.get_object()
         if user == request.user:
             return Response(
-                {"detail": "You cannot delete your own account"},
+                {"error": _('you_cannot_delete_your_own_account')},
                 status=status.HTTP_400_BAD_REQUEST
             )
         user.is_delete = True
@@ -43,7 +43,7 @@ class AdminUserViewSet(viewsets.ModelViewSet):
         user = self.get_object()
         if user == request.user:
             return Response(
-                {"detail": "You cannot modify your own account"},
+                {"error": _('you_cannot_modify_your_own_account')},
                 status=status.HTTP_400_BAD_REQUEST
             )
         return super().partial_update(request, *args, **kwargs)

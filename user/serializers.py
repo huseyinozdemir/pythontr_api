@@ -3,9 +3,14 @@ import requests
 
 from django.conf import settings
 from django.contrib.auth import get_user_model, authenticate
+from django.contrib.auth.tokens import default_token_generator
 from django.utils.translation import gettext_lazy as _
+from django.utils.http import urlsafe_base64_decode
+from django.utils.encoding import force_str
 
 from rest_framework import serializers
+
+from core.models import User
 
 
 class UserSerializer(serializers.ModelSerializer):
@@ -64,7 +69,7 @@ class UserSerializer(serializers.ModelSerializer):
 
             if not confirm_password:
                 raise serializers.ValidationError({
-                    'confirm_password': 'Please confirm your password'
+                    'confirm_password': _('please_confirm_your_password')
                 })
 
             if password != confirm_password:
@@ -75,13 +80,15 @@ class UserSerializer(serializers.ModelSerializer):
             if self.context['request'].method in ['PUT', 'PATCH']:
                 if not current_password:
                     raise serializers.ValidationError({
-                        'current_password': 'Please current your password'
+                        'current_password': _(
+                            'please_enter_your_current_password'
+                        )
                     })
 
                 user = self.context['request'].user
                 if not user.check_password(current_password):
                     raise serializers.ValidationError({
-                        'current_password': 'Current password is incorrect'
+                        'current_password': _('current_password_is_incorrect')
                     })
 
         return data
@@ -149,3 +156,78 @@ class AuthTokenSerializer(serializers.Serializer):
 
         attrs['user'] = user
         return attrs
+
+
+class PasswordResetSerializer(serializers.Serializer):
+    email = serializers.EmailField()
+
+    if not settings.DEBUG and 'test' not in sys.argv:
+        captcha = serializers.CharField(write_only=True, required=True)
+
+        def validate_captcha(self, value):
+            recaptcha_url = settings.RECAPTCHA_URL
+            payload = {
+                "secret": settings.RECAPTCHA_SECRET_KEY,
+                "response": value
+            }
+            response = requests.post(recaptcha_url, data=payload)
+            result = response.json()
+            if not result.get("success"):
+                raise serializers.ValidationError(
+                    _("recaptcha_verification_failed"))
+            return value
+
+    def validate_email(self, value):
+        try:
+            User.objects.get(email=value)
+        except User.DoesNotExist:
+            raise serializers.ValidationError({"error": _('email_not_found')})
+        return value
+
+
+class PasswordResetConfirmSerializer(serializers.Serializer):
+    password = serializers.CharField(
+        write_only=True,
+        min_length=8,
+        style={'input_type': 'password'}
+    )
+    confirm_password = serializers.CharField(
+        write_only=True,
+        style={'input_type': 'password'}
+    )
+    token = serializers.CharField()
+    uidb64 = serializers.CharField()
+
+    if not settings.DEBUG and 'test' not in sys.argv:
+        captcha = serializers.CharField(write_only=True, required=True)
+
+        def validate_captcha(self, value):
+            recaptcha_url = settings.RECAPTCHA_URL
+            payload = {
+                "secret": settings.RECAPTCHA_SECRET_KEY,
+                "response": value
+            }
+            response = requests.post(recaptcha_url, data=payload)
+            result = response.json()
+            if not result.get("success"):
+                raise serializers.ValidationError(
+                    _("recaptcha_verification_failed"))
+            return value
+
+    def validate(self, data):
+        if data['password'] != data['confirm_password']:
+            raise serializers.ValidationError(
+                {'confirm_password': _('passwords_do_not_match')}
+            )
+        try:
+            uid = force_str(urlsafe_base64_decode(data['uidb64']))
+            user = User.objects.get(pk=uid)
+        except (TypeError, ValueError, User.DoesNotExist):
+            raise serializers.ValidationError({'error': _('invalid_link')})
+
+        if not default_token_generator.check_token(user, data['token']):
+            raise serializers.ValidationError(
+                {'error': _('invalid_link_or_expired')})
+
+        data['user'] = user
+        return data

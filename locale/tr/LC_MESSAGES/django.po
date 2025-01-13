@@ -55,3 +55,69 @@ msgstr "reCAPTCHA doğrulaması başarısız oldu."
 
 msgid "not_found"
 msgstr "Kayıt bulunamadı"
+
+msgid "welcome_to_www"
+msgstr "Pythontr.com sitemize hoşgeldiniz!"
+
+msgid "welcome_to_www_message"
+msgstr "Hesabınızı aktif hale getirmek için lütfen aşağıdaki linki tıklayınız.\n{link}\n\nBu link {expires_at} tarihine kadar geçerlidir.\n\nPythontr.com Team"
+
+msgid "activation_code_is_expired"
+msgstr "Aktivasyon kodunun süresi dolmuş."
+
+msgid "activation_code_is_invalid"
+msgstr "Geçersiz aktivasyon kodu."
+
+msgid "account_activated_successfully"
+msgstr "Hesabınız başarıyla aktive edildi."
+
+msgid "new_activation_code_title"
+msgstr "Yeni Aktivasyon Kodu"
+
+msgid "new_activation_code_message"
+msgstr "Yeni aktivasyon kodunuz: {code}\nBu link {expires_at} tarihine kadar geçerlidir.\n\nPythontr.com Team"
+
+msgid "new_activation_code_sent"
+msgstr "Yeni aktivasyon kodu email adresinize gönderildi."
+
+msgid "user_not_found_with_active_code"
+msgstr "Bu email adresi ile kayıtlı aktif edilmemiş hesap bulunamadı."
+
+msgid "please_confirm_your_password"
+msgstr "Lütfen şifrenizi doğrulayın"
+
+msgid "please_enter_your_current_password"
+msgstr "Lütfen güncel şifrenizi doğrulayın"
+
+msgid "current_password_is_incorrect"
+msgstr "Güncel şifreniz yanlış"
+
+msgid "password_reset_title"
+msgstr "Şifre Sıfırlama"
+
+msgid "password_reset_message"
+msgstr "Şifrenizi sıfırlamak için aşağıdaki linke tıklayın:\n{link}\n\nPythontr.com Team"
+
+msgid "password_reset_success_message_link_sent"
+msgstr "Şifre sıfırlama linki email adresinize gönderildi."
+
+msgid "password_reset_success_message"
+msgstr "Şifreniz başarıyla değiştirildi."
+
+msgid "invalid_link"
+msgstr "Geçersiz link"
+
+msgid "invalid_link_or_expired"
+msgstr "Geçersiz link veya süresi dolmuş"
+
+msgid "email_not_found"
+msgstr "Bu email adresi ile kayıtlı kullanıcı bulunamadı."
+
+msgid "you_cannot_delete_your_own_account"
+msgstr "Kendi hesabınızı silemezsiniz."
+
+msgid "you_cannot_modify_your_own_account"
+msgstr "Kendi hesabınızı değiştiremezsiniz."
+
+msgid "invalid_token_or_expired"
+msgstr "Token geçersiz veya süresi dolmuş."

@@ -16,8 +16,11 @@ Tips:
 - docker compose run app sh -c "python manage.py createsuperuser" # Create superuser
 - docker compose run app sh -c "python manage.py test && flake8" # Test
 - docker compose run app sh -c "python manage.py collectstatic" # Create css ext.
+- docker compose run app sh -c "django-admin compilemessages" # Compile messages or
+- docker compose run app sh -c "python manage.py compilemessages" # Compile messages
 
 Single Test:
+
 - docker compose run app sh -c "python manage.py test user.admin.tests.test_user_admin_api.UserAdminAPITests.test_list_users"
 
 ## Git Hooks Install for quality check on codes

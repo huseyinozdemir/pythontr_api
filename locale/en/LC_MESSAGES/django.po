@@ -55,3 +55,69 @@ msgstr "reCAPTCHA verification failed."
 
 msgid "not_found"
 msgstr "Not found"
+
+msgid "welcome_to_www"
+msgstr "Welcome to www.pythontr.com"
+
+msgid "welcome_to_www_message"
+msgstr "Please click the link below to activate your account:\n{link}\n\nThis link is valid until {expires_at}."
+
+msgid "activation_code_is_expired"
+msgstr "Activation code is expired"
+
+msgid "activation_code_is_invalid"
+msgstr "Invalid activation code"
+
+msgid "account_activated_successfully"
+msgstr "Account activated successfully"
+
+msgid "new_activation_code_title"
+msgstr "New Activation Code"
+
+msgid "new_activation_code_message"
+msgstr "Your new activation code: {code}\nThis link is valid until {expires_at}."
+
+msgid "new_activation_code_sent"
+msgstr "New activation code sent to your email address."
+
+msgid "user_not_found_with_active_code"
+msgstr "User not found with active code"
+
+msgid "please_confirm_your_password"
+msgstr "Please confirm your password"
+
+msgid "please_enter_your_current_password"
+msgstr "Please enter your current password"
+
+msgid "current_password_is_incorrect"
+msgstr "Current password is incorrect"
+
+msgid "password_reset_title"
+msgstr "Password Reset"
+
+msgid "password_reset_message"
+msgstr "Please click the link below to reset your password:\n{link}\n\nPythontr.com Team"
+
+msgid "password_reset_success_message_link_sent"
+msgstr "Password reset link sent to your email address."
+
+msgid "password_reset_success_message"
+msgstr "Password reset successfully."
+
+msgid "invalid_link"
+msgstr "Invalid link"
+
+msgid "invalid_link_or_expired"
+msgstr "Invalid link or expired"
+
+msgid "email_not_found"
+msgstr "Email not found"
+
+msgid "you_cannot_delete_your_own_account"
+msgstr "You cannot delete your own account"
+
+msgid "you_cannot_modify_your_own_account"
+msgstr "You cannot modify your own account"
+
+msgid "invalid_token_or_expired"
+msgstr "Invalid token or expired"
