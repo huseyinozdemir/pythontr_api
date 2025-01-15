@@ -16,7 +16,8 @@ from django.utils.translation import gettext_lazy as _
 
 from app.authentication import CookieTokenAuthentication
 from user.serializers import UserSerializer, AuthTokenSerializer, \
-    PasswordResetSerializer, PasswordResetConfirmSerializer
+    PasswordResetSerializer, PasswordResetConfirmSerializer, \
+    ResendActivationSerializer
 from core.models import ActivationCode
 
 User = get_user_model()
@@ -101,8 +102,14 @@ class ActivateUserView(generics.GenericAPIView):
 
 
 class ResendActivationView(generics.GenericAPIView):
+    serializer_class = ResendActivationSerializer
+
     def post(self, request):
-        email = request.data.get('email')
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+
+        email = serializer.validated_data['email']
+
         try:
             user = User.objects.get(email=email, is_active=False)
             activation = ActivationCode.create_activation_code(user)
@@ -110,7 +117,8 @@ class ResendActivationView(generics.GenericAPIView):
             send_mail(
                 _('new_activation_code_title'),
                 _('new_activation_code_message').format(
-                    code=activation.code,
+                    link=f'{settings.SITE_URL}/register/activate/'
+                         f'{activation.code}',
                     expires_at=activation.expires_at.strftime("%d/%m/%Y %H:%M")
                 ),
                 settings.DEFAULT_FROM_EMAIL,

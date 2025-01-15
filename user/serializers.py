@@ -244,3 +244,25 @@ class PasswordResetConfirmSerializer(serializers.Serializer):
 
         data['user'] = user
         return data
+
+
+class ResendActivationSerializer(serializers.Serializer):
+    email = serializers.EmailField()
+
+    if not settings.DEBUG and 'test' not in sys.argv:
+        captcha = serializers.CharField(write_only=True, required=True)
+
+        def validate_captcha(self, value):
+            recaptcha_url = settings.RECAPTCHA_URL
+            payload = {
+                "secret": settings.RECAPTCHA_SECRET_KEY,
+                "response": value
+            }
+            response = requests.post(recaptcha_url, data=payload)
+            result = response.json()
+
+            if not result.get("success"):
+                raise serializers.ValidationError(
+                    _("recaptcha_verification_failed"))
+
+            return value
