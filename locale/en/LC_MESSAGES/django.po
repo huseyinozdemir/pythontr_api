@@ -121,3 +121,9 @@ msgstr "You cannot modify your own account"
 
 msgid "invalid_token_or_expired"
 msgstr "Invalid token or expired"
+
+msgid "only_staff_can_modify_staff_status"
+msgstr "Only staff can modify staff status"
+
+msgid "error_sending_email"
+msgstr "Error sending email"

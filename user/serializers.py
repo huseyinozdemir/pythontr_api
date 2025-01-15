@@ -15,7 +15,7 @@ from core.models import User
 
 class UserSerializer(serializers.ModelSerializer):
     image_url = serializers.ReadOnlyField()
-    is_staff = serializers.BooleanField()
+    is_staff = serializers.BooleanField(required=False)
     confirm_password = serializers.CharField(
         write_only=True,
         required=False,
@@ -50,7 +50,7 @@ class UserSerializer(serializers.ModelSerializer):
             'email', 'password', 'confirm_password', 'username',
             'name', 'surname', 'image', 'about_me', 'linkedin',
             'github', 'is_notification_email', 'image_url', 'slug',
-            'is_staff', 'current_password'
+            'is_staff', 'current_password',
         ]
         if not settings.DEBUG and 'test' not in sys.argv:
             fields.append('captcha')
@@ -59,7 +59,9 @@ class UserSerializer(serializers.ModelSerializer):
         extra_kwargs = {
             'password': {
                 'write_only': True, 'min_length': 5,
-                'style': {'input_type': 'password'}}}
+                'style': {'input_type': 'password'}
+            },
+        }
 
     def validate(self, data):
         password = data.get('password')
@@ -93,9 +95,20 @@ class UserSerializer(serializers.ModelSerializer):
 
         return data
 
+    def validate_is_staff(self, value):
+        request = self.context.get('request')
+        if self.instance and request.method in ['PUT', 'PATCH']:
+            if value != self.instance.is_staff and not request.user.is_staff:
+                raise serializers.ValidationError(
+                    _('only_staff_can_modify_staff_status'))
+        return value
+
     def create(self, validated_data):
+        validated_data['is_staff'] = False
         password = validated_data.pop('password')
         validated_data.pop('confirm_password')
+        if not settings.DEBUG and 'test' not in sys.argv:
+            validated_data.pop('captcha')
         return get_user_model().objects.create_user(
             password=password,
             **validated_data

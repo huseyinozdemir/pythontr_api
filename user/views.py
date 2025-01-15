@@ -1,3 +1,5 @@
+
+from smtplib import SMTPException
 from rest_framework import generics, authentication, permissions
 from rest_framework.authtoken.views import ObtainAuthToken
 from rest_framework.settings import api_settings
@@ -26,17 +28,23 @@ class CreateUserView(generics.CreateAPIView):
     def perform_create(self, serializer):
         user = serializer.save()
         activation = ActivationCode.create_activation_code(user)
-        send_mail(
-            _('welcome_to_www'),
-            _('welcome_to_www_message').format(
-                link=f'{settings.SITE_URL}/register/activate/'
-                     f'{activation.code}',
-                expires_at=activation.expires_at.strftime("%d/%m/%Y %H:%M")
-            ),
-            settings.DEFAULT_FROM_EMAIL,
-            [user.email],
-            fail_silently=False,
-        )
+        try:
+            send_mail(
+                _('welcome_to_www'),
+                _('welcome_to_www_message').format(
+                    link=f'{settings.SITE_URL}/register/activate/'
+                         f'{activation.code}',
+                    expires_at=activation.expires_at.strftime("%d/%m/%Y %H:%M")
+                ),
+                settings.DEFAULT_FROM_EMAIL,
+                [user.email],
+                fail_silently=False,
+            )
+        except SMTPException as e:
+            return Response(
+                {'error': _('error_sending_email'), 'detail': str(e)},
+                status=status.HTTP_500_INTERNAL_SERVER_ERROR
+            )
 
 
 class CreateTokenView(ObtainAuthToken):
@@ -120,6 +128,11 @@ class ResendActivationView(generics.GenericAPIView):
                 {'error': _('user_not_found_with_active_code')},
                 status=status.HTTP_400_BAD_REQUEST
             )
+        except SMTPException as e:
+            return Response(
+                {'error': _('error_sending_email'), 'detail': str(e)},
+                status=status.HTTP_500_INTERNAL_SERVER_ERROR
+            )
 
 
 class PasswordResetView(generics.GenericAPIView):
@@ -137,14 +150,20 @@ class PasswordResetView(generics.GenericAPIView):
         uidb64 = urlsafe_base64_encode(force_bytes(user.pk))
 
         # Send Email
-        reset_url = f"{settings.SITE_URL}/forgot-password/{uidb64}/{token}"
-        send_mail(
-            _('password_reset_title'),
-            _('password_reset_message').format(link=reset_url),
-            settings.DEFAULT_FROM_EMAIL,
-            [email],
-            fail_silently=False,
-        )
+        try:
+            reset_url = f"{settings.SITE_URL}/forgot-password/{uidb64}/{token}"
+            send_mail(
+                _('password_reset_title'),
+                _('password_reset_message').format(link=reset_url),
+                settings.DEFAULT_FROM_EMAIL,
+                [email],
+                fail_silently=False,
+            )
+        except SMTPException as e:
+            return Response(
+                {'error': _('error_sending_email'), 'detail': str(e)},
+                status=status.HTTP_500_INTERNAL_SERVER_ERROR
+            )
 
         return Response({
             'message': _('password_reset_success_message_link_sent')

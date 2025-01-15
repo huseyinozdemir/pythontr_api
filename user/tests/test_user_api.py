@@ -24,7 +24,8 @@ class PublicUserApiTests(TestCase):
             'email': 'test@hotmail.com',
             'password': '123qwe',
             'confirm_password': '123qwe',
-            'name': 'huseyin'
+            'name': 'huseyin',
+            'username': 'huseyin'
         }
         res = self.client.post(CREATE_USER_URL, payload)
         self.assertEqual(res.status_code, status.HTTP_201_CREATED)

@@ -21,7 +21,7 @@ class Migration(migrations.Migration):
                 ('last_login', models.DateTimeField(blank=True, null=True, verbose_name='last login')),
                 ('is_superuser', models.BooleanField(default=False, help_text='Designates that this user has all permissions without explicitly assigning them.', verbose_name='superuser status')),
                 ('email', models.EmailField(max_length=255, unique=True)),
-                ('username', models.CharField(blank=True, max_length=255)),
+                ('username', models.CharField(max_length=255, unique=True)),
                 ('name', models.CharField(blank=True, max_length=255)),
                 ('surname', models.CharField(blank=True, max_length=255)),
                 ('image', models.ImageField(null=True, upload_to=core.models.avatar_image_file_path)),

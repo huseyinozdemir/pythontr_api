@@ -121,3 +121,9 @@ msgstr "Kendi hesabınızı değiştiremezsiniz."
 
 msgid "invalid_token_or_expired"
 msgstr "Token geçersiz veya süresi dolmuş."
+
+msgid "only_staff_can_modify_staff_status"
+msgstr "Sadece yöneticiler personel durumunu değiştirebilir."
+
+msgid "error_sending_email"
+msgstr "Email gönderimi sırasında bir hata oluştu."
