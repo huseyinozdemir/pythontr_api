@@ -51,7 +51,7 @@ msgid "passwords_do_not_match"
 msgstr "Passwords do not match"
 
 msgid "recaptcha_verification_failed"
-msgstr "reCAPTCHA verification failed."
+msgstr "CAPTCHA verification failed."
 
 msgid "not_found"
 msgstr "Not found"
@@ -75,7 +75,7 @@ msgid "new_activation_code_title"
 msgstr "New Activation Code"
 
 msgid "new_activation_code_message"
-msgstr "Your new activation code: {code}\nThis link is valid until {expires_at}."
+msgstr "Your new activation code: {link}\nThis link is valid until {expires_at}."
 
 msgid "new_activation_code_sent"
 msgstr "New activation code sent to your email address."

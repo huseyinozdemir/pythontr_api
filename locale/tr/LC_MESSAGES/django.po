@@ -51,7 +51,7 @@ msgid "passwords_do_not_match"
 msgstr "Şifreler eşleşmiyor"
 
 msgid "recaptcha_verification_failed"
-msgstr "reCAPTCHA doğrulaması başarısız oldu."
+msgstr "CAPTCHA doğrulaması başarısız oldu."
 
 msgid "not_found"
 msgstr "Kayıt bulunamadı"
@@ -75,7 +75,7 @@ msgid "new_activation_code_title"
 msgstr "Yeni Aktivasyon Kodu"
 
 msgid "new_activation_code_message"
-msgstr "Yeni aktivasyon kodunuz: {code}\nBu link {expires_at} tarihine kadar geçerlidir.\n\nPythontr.com Team"
+msgstr "Yeni aktivasyon kodunuz: {link}\nBu link {expires_at} tarihine kadar geçerlidir.\n\nPythontr.com Team"
 
 msgid "new_activation_code_sent"
 msgstr "Yeni aktivasyon kodu email adresinize gönderildi."

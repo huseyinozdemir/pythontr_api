@@ -2,7 +2,7 @@ on:
   push:
     branches:
       - master
-      - PYT-37
+      - PYT-38
     tags:
       - v1.*
 
