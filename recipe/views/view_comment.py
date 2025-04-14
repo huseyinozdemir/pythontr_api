@@ -8,18 +8,23 @@ from core.models import Article, Comment
 from recipe.permissions import IsAuthenticatedAndOwner
 
 from recipe import serializers
- 
+
 from .baseview import BaseViewSet
 from .filter_param import RulesFilter, Search
 
 
-class CommentViewSet(BaseViewSet, mixins.CreateModelMixin, mixins.UpdateModelMixin):
+class CommentViewSet(
+    BaseViewSet,
+    mixins.CreateModelMixin,
+    mixins.UpdateModelMixin,
+):
     queryset = Comment.objects.all()
     serializer_class = serializers.CommentSerializer
     permission_classes_by_action = {'create': [AllowAny],
                                     'list': [AllowAny],
                                     'update': [IsAuthenticatedAndOwner],
-                                    'partial_update': [IsAuthenticatedAndOwner]}
+                                    'partial_update': [IsAuthenticatedAndOwner]
+                                    }
 
     def get_queryset(self):
         article_content_type = ContentType.objects.get_for_model(Article)
@@ -41,7 +46,7 @@ class CommentViewSet(BaseViewSet, mixins.CreateModelMixin, mixins.UpdateModelMix
 
         comment_type = self.request.query_params.get('comment_type', 'article')
         parent_id = self.request.query_params.get('parent_id')
- 
+
         if comment_type == 'article':
             base_kwargs.update({
                 '{0}_{1}'.format('content', 'type'): article_content_type,

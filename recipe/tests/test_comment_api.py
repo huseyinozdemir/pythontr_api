@@ -11,6 +11,7 @@ from django.contrib.auth import get_user_model
 
 COMMENT_URL = reverse('recipe:comment-list')
 
+
 class PublicCommentApiTest(TestCase):
 
     def setUp(self):
@@ -42,6 +43,7 @@ class PublicCommentApiTest(TestCase):
         res = self.client.get(COMMENT_URL)
         self.assertEqual(res.status_code, status.HTTP_200_OK)
 
+
 class PrivateCommentApiTest(TestCase):
     def setUp(self):
         self.user = get_user_model().objects.create_user(
@@ -50,9 +52,10 @@ class PrivateCommentApiTest(TestCase):
         )
         self.client = APIClient()
         self.client.force_authenticate(self.user)
-    
+
     def test_create_comment(self):
         self.is_staff = True
+
         article = Article.objects.create(
             title='Pythont.Com on BBC',
             title_h1='Do you hear us? Pythontr...',
@@ -73,7 +76,7 @@ class PrivateCommentApiTest(TestCase):
         }
         res = self.client.post(COMMENT_URL, content)
         self.assertEquals(res.status_code, status.HTTP_201_CREATED)
-        
+
     def test_update_article_comment(self):
         self.is_staff = True
 
@@ -90,16 +93,18 @@ class PrivateCommentApiTest(TestCase):
             name='TEST',
             ip='127.0.0.1',
             content_type=ContentType.objects.get_for_model(Article),
-            object_id= article.id,
+            object_id=article.id,
             is_active=True,
             user=self.user
         )
         content = {
-            'content': '............... bla bla ...  bla ........',          
+            'content': '............... bla bla ...  bla ........',
         }
 
-        url = COMMENT_URL + str(comment.id) + '/?comment_type=article' # commentin commentini update etmek için comment_type=comment &parent_id=<geçerli_parent_id> parentı varsa
- 
+        url = COMMENT_URL + str(comment.id) + '/?comment_type=article'
+        # commentin commentini update etmek için comment_type=comment
+        # &parent_id=<geçerli_parent_id> parentı varsa
+
         res = self.client.patch(url, content)
         self.assertEquals(res.status_code, status.HTTP_200_OK)
         self.assertEquals(res.data['content'], content['content'])
@@ -120,7 +125,7 @@ class PrivateCommentApiTest(TestCase):
             name='TEST Parent',
             ip='127.0.0.1',
             content_type=ContentType.objects.get_for_model(Article),
-            object_id= article.id,
+            object_id=article.id,
             is_active=True,
             user=self.user
         )
@@ -131,16 +136,18 @@ class PrivateCommentApiTest(TestCase):
             name='TEST Child',
             ip='127.0.0.1',
             content_type=ContentType.objects.get_for_model(Comment),
-            object_id= parent_comment.id,
+            object_id=parent_comment.id,
             is_active=True,
             user=self.user
         )
         content = {
-            'content': '............... bla bla ...  bla ........',          
+            'content': '............... bla bla ...  bla ........',
         }
 
-        url = COMMENT_URL + str(child_comment.id) + '/?comment_type=comment' # commentin commentini update etmek için comment_type=comment &parent_id=<geçerli_parent_id> parentı varsa
- 
+        url = COMMENT_URL + str(child_comment.id) + '/?comment_type=comment'
+        # commentin commentini update etmek için comment_type=comment
+        # &parent_id=<geçerli_parent_id> parentı varsa
+
         res = self.client.patch(url, content)
         self.assertEquals(res.status_code, status.HTTP_200_OK)
         self.assertEquals(res.data['content'], content['content'])
