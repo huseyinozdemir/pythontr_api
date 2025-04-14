@@ -5,20 +5,25 @@ from django.contrib.contenttypes.models import ContentType
 
 from core.models import Article, Comment
 
-from recipe import serializers
+from recipe.permissions import IsAuthenticatedAndOwner
 
+from recipe import serializers
+ 
 from .baseview import BaseViewSet
 from .filter_param import RulesFilter, Search
 
 
-class CommentViewSet(BaseViewSet, mixins.CreateModelMixin):
+class CommentViewSet(BaseViewSet, mixins.CreateModelMixin, mixins.UpdateModelMixin):
     queryset = Comment.objects.all()
     serializer_class = serializers.CommentSerializer
     permission_classes_by_action = {'create': [AllowAny],
-                                    'list': [AllowAny]}
+                                    'list': [AllowAny],
+                                    'update': [IsAuthenticatedAndOwner],
+                                    'partial_update': [IsAuthenticatedAndOwner]}
 
     def get_queryset(self):
-        content_type = ContentType.objects.get_for_model(Article)
+        article_content_type = ContentType.objects.get_for_model(Article)
+        comment_content_type = ContentType.objects.get_for_model(Comment)
         search = self.request.query_params.get('search')
         queryset = []
         SearchKwargs = {
@@ -29,23 +34,37 @@ class CommentViewSet(BaseViewSet, mixins.CreateModelMixin):
             Search(search, **SearchKwargs)
         ]
 
-        kwargs = {
+        base_kwargs = {
             '{0}_{1}'.format('is', 'active'): True,
             '{0}_{1}'.format('is', 'delete'): False,
-            '{0}_{1}'.format('content', 'type'): content_type,
-            '{0}__{1}'.format('object_id', 'in'): Article.objects.filter(
-                is_active=True,
-                is_delete=False
-            ).all(),
         }
+
+        comment_type = self.request.query_params.get('comment_type', 'article')
+        parent_id = self.request.query_params.get('parent_id')
+ 
+        if comment_type == 'article':
+            base_kwargs.update({
+                '{0}_{1}'.format('content', 'type'): article_content_type,
+                '{0}__{1}'.format('object_id', 'in'): Article.objects.filter(
+                    is_active=True,
+                    is_delete=False
+                ).all(),
+            })
+        elif comment_type == 'comment':
+            base_kwargs.update({
+                '{0}_{1}'.format('content', 'type'): comment_content_type,
+            })
+
+            if parent_id:
+                base_kwargs['{0}'.format('object_id')] = parent_id
 
         rf = RulesFilter(rules)
         for item in rf.get_res():
             if item.is_check():
-                kwargs.update(item.get_param())
+                base_kwargs.update(item.get_param())
 
         queryset = self.queryset.filter(
-            **kwargs
+            **base_kwargs
         ).all().order_by('-id')
 
         return queryset
