@@ -1,3 +1,4 @@
+from django.shortcuts import get_object_or_404
 from rest_framework import mixins
 from rest_framework.permissions import (IsAuthenticated,
                                         IsAuthenticatedOrReadOnly)
@@ -25,7 +26,7 @@ class SliderViewSet(BaseViewSet, mixins.CreateModelMixin):
 
     def get_object(self):
         id = self.kwargs.get('pk')
-        return Slider.objects.get(pk=id)
+        return get_object_or_404(Slider, pk=id)
 
     def get_queryset(self):
         """ self.action == 'list' """

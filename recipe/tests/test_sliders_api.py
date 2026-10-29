@@ -32,8 +32,8 @@ class PublicSliderApiTest(TestCase):
 
     def test_404_slider_login_not_required(self):
         url = detail_url(1)
-        with self.assertRaises(Slider.DoesNotExist):
-            self.client.get(url)
+        res = self.client.get(url)
+        self.assertEqual(res.status_code, status.HTTP_404_NOT_FOUND)
 
     def test_dont_create_slider(self):
         # self.client.force_authenticate(self.user)
