@@ -75,7 +75,7 @@ class PrivateCommentApiTest(TestCase):
             "comments": [],
         }
         res = self.client.post(COMMENT_URL, content)
-        self.assertEquals(res.status_code, status.HTTP_201_CREATED)
+        self.assertEqual(res.status_code, status.HTTP_201_CREATED)
 
     def test_update_article_comment(self):
         self.is_staff = True
@@ -106,8 +106,8 @@ class PrivateCommentApiTest(TestCase):
         # &parent_id=<geçerli_parent_id> parentı varsa
 
         res = self.client.patch(url, content)
-        self.assertEquals(res.status_code, status.HTTP_200_OK)
-        self.assertEquals(res.data['content'], content['content'])
+        self.assertEqual(res.status_code, status.HTTP_200_OK)
+        self.assertEqual(res.data['content'], content['content'])
 
     def test_update_comment_comment(self):
         self.is_staff = True
@@ -149,5 +149,5 @@ class PrivateCommentApiTest(TestCase):
         # &parent_id=<geçerli_parent_id> parentı varsa
 
         res = self.client.patch(url, content)
-        self.assertEquals(res.status_code, status.HTTP_200_OK)
-        self.assertEquals(res.data['content'], content['content'])
+        self.assertEqual(res.status_code, status.HTTP_200_OK)
+        self.assertEqual(res.data['content'], content['content'])

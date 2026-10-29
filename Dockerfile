@@ -1,4 +1,4 @@
-FROM python:3.9-alpine3.13
+FROM python:3.12-alpine3.21
 LABEL maintainer="Pythontr.Com Huseyin OZDEMIR"
 
 ENV PYTHONUNBUFFERED 1

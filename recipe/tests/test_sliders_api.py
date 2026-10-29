@@ -32,8 +32,8 @@ class PublicSliderApiTest(TestCase):
 
     def test_404_slider_login_not_required(self):
         url = detail_url(1)
-        with self.assertRaises(Slider.DoesNotExist):
-            self.client.get(url)
+        res = self.client.get(url)
+        self.assertEqual(res.status_code, status.HTTP_404_NOT_FOUND)
 
     def test_dont_create_slider(self):
         # self.client.force_authenticate(self.user)
@@ -56,7 +56,7 @@ class PublicSliderApiTest(TestCase):
         url = detail_url(slider.id)
 
         res = self.client.get(url)
-        self.assertEquals(res.status_code, status.HTTP_200_OK)
+        self.assertEqual(res.status_code, status.HTTP_200_OK)
 
 
 class PrivateSliderApiTest(TestCase):
@@ -79,7 +79,7 @@ class PrivateSliderApiTest(TestCase):
         }
 
         res = self.client.post(SLIDERS_URL, content)
-        self.assertEquals(res.status_code, status.HTTP_201_CREATED)
+        self.assertEqual(res.status_code, status.HTTP_201_CREATED)
 
     def test_update_slider(self):
         self.is_staff = True
@@ -101,8 +101,8 @@ class PrivateSliderApiTest(TestCase):
         url = detail_url(slider.id)
 
         res = self.client.put(url, content)
-        self.assertEquals(res.status_code, status.HTTP_200_OK)
-        self.assertEquals(res.data['title'], content['title'])
+        self.assertEqual(res.status_code, status.HTTP_200_OK)
+        self.assertEqual(res.data['title'], content['title'])
 
     def test_dont_delete_slider(self):
         self.is_staff = True

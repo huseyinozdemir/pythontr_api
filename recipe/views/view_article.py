@@ -1,3 +1,4 @@
+from django.shortcuts import get_object_or_404
 from rest_framework import mixins
 from rest_framework.permissions import (IsAuthenticated,
                                         IsAuthenticatedOrReadOnly)
@@ -34,8 +35,8 @@ class ArticleViewSet(BaseViewSet, mixins.CreateModelMixin):
     def get_object(self):
         id_or_slug = self.kwargs.get('pk')
         if id_or_slug.isdigit():
-            return Article.objects.get(pk=id_or_slug)
-        return Article.objects.get(slug=id_or_slug)
+            return get_object_or_404(Article, pk=id_or_slug)
+        return get_object_or_404(Article, slug=id_or_slug)
 
     def get_queryset(self):
         """ self.action == 'list' """
