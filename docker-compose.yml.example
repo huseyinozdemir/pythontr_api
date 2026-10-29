@@ -30,7 +30,7 @@ services:
             - api-network
 
     db:
-        image: postgres:13-alpine
+        image: postgres:16-alpine
         volumes:
             - ./data/:/var/lib/postgresql/data
         environment:

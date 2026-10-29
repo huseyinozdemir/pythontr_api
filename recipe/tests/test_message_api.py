@@ -70,7 +70,7 @@ class PrivateMessageApiTest(TestCase):
         }
 
         res = self.client.post(MESSAGES_URL, message)
-        self.assertEquals(res.status_code, status.HTTP_201_CREATED)
+        self.assertEqual(res.status_code, status.HTTP_201_CREATED)
 
     def test_dont_delete_message(self):
         message = Message.objects.create(
@@ -217,4 +217,4 @@ class PrivateMessageApiTest(TestCase):
         url = detail_url(message.id)
 
         res = self.client.get(url)
-        self.assertEquals(res.status_code, status.HTTP_200_OK)
+        self.assertEqual(res.status_code, status.HTTP_200_OK)
