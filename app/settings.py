@@ -61,6 +61,7 @@ INSTALLED_APPS = [
     'core',
     'user',
     'recipe',
+    'contact',
 ]
 
 REST_FRAMEWORK = {    
@@ -68,6 +69,11 @@ REST_FRAMEWORK = {
         'app.authentication.CookieTokenAuthentication',
         'rest_framework.authentication.TokenAuthentication',  # Geriye dönük uyumluluk için
     ],
+    # Next.js vekil üzerinden geldiği için IP herkes için aynı olabilir;
+    # bu oran tüm form trafiği için bir üst sınırdır.
+    'DEFAULT_THROTTLE_RATES': {
+        'contact': os.environ.get('CONTACT_THROTTLE_RATE', '30/hour'),
+    },
 }
 
 TOKEN_EXPIRED_AFTER_SECONDS = 86400
@@ -134,6 +140,9 @@ EMAIL_USE_TLS = os.environ.get('EMAIL_USE_TLS').lower() == 'true'
 EMAIL_HOST_USER = os.environ.get('EMAIL_HOST_USER')
 EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_HOST_PASSWORD')
 DEFAULT_FROM_EMAIL = os.environ.get('DEFAULT_FROM_EMAIL')
+# Destek formu mesajlarının gideceği adres (arayüzde gösterilmez).
+CONTACT_EMAIL = os.environ.get('CONTACT_EMAIL') or DEFAULT_FROM_EMAIL
+CONTACT_REQUIRE_CAPTCHA = not DEBUG and 'test' not in sys.argv
 
 
 # Password validation
