@@ -4,7 +4,7 @@ psycopg2-binary==2.9.13
 Pillow==13.0.0
 python-dotenv==1.2.4
 django_simple_captcha==0.6.3
-requests==2.32.5
+requests==2.33.0
 gunicorn==23.0.0
 django-cors-headers==4.9.0
 django-filter==25.2
